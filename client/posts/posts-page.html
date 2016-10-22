@@ -1,0 +1,20 @@
+<div class="row">
+    <div class="col-xs-3" ng-repeat= "post in postsPageCtrl.posts">
+        <div class="card" >
+            <img class="card-img-top" src="http://www.howdesign.com/wp-content/uploads/shutterstock_928215491.jpg" alt="Card image cap">
+            <div class="card-block">
+                <p class="card-text">
+                    <li>
+                        Text: {{post.text}}
+                    </li>
+                    <li>
+                        Creadted by: {{post.user}}
+                    </li>
+                    <li>
+                        Creadted date: {{post.created_date | date}}
+                    </li>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
