@@ -3,5 +3,23 @@ from user_profiles.models import User
 
 class Posts(models.Model):
     user =models.ForeignKey(User)
-    text = models.CharField(max_length = 200)
+    text = models.CharField(max_length = 500)
+    reference = models.CharField(max_length = 100, blank=True, default="Own")
     created_date = models.DateTimeField(auto_now_add = True)
+    visible = models.BooleanField(default=True)
+
+
+    ART = "Art"
+    SCIENCE = "Science"
+    FINANCE = "Finance"
+    TECHNOLOGY = "Technology"
+    BUSINESS = "Business"
+    CHOICES=(
+        (ART, "Art"),
+        (SCIENCE, "Science"),
+        (FINANCE, "Finance"),
+        (TECHNOLOGY, "Technology"),
+        (BUSINESS, "Business"),
+        )
+    category = models.CharField(max_length=50, 
+        default=ART, choices=CHOICES)

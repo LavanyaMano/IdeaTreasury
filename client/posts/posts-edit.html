@@ -1,0 +1,64 @@
+
+<form ng-submit="postsEditCtrl.saveItem()">
+    <div class="panel panel-primary form-group ">
+        <div class="panel-heading">
+            <ul class="nav nav-pills">
+                <li>
+                    <h3 class="panel-title">
+                        <input ng-model="postsEditCtrl.editedItem.user" class="form-control" placeholder="user" ></input>
+                    </h3>
+                </li>
+                <li>
+                    <span class="badge pull-right">
+                        <select name="category" ng-model="postsEditCtrl.editedItem.category" class="form-control">
+                            <option value="Art">
+                                Art
+                            </option>
+                            <option value="Science">
+                                Science
+                            </option>
+                            <option value="Finance">
+                                Finance
+                            </option>
+                            <option value="Technology">
+                                Technology
+                            </option>
+                            <option value="Business">
+                                Business
+                            </option>
+                        </select>
+                    </span>
+                </li>
+            </ul>
+        </div>
+        <div class="panel-body">
+            <input ng-model="postsEditCtrl.editedItem.text" class="form-control" placeholder="Text" ></input>
+            <input ng-model="postsEditCtrl.editedItem.reference" class="form-control" placeholder="Reference"></input>
+        </div>
+        <div class="panel-footer">
+            <select name="visible" ng-model="postsEditCtrl.editedItem.visible" class="form-control">
+                <option value="true">
+                    Public
+                </option>
+                <option value="false">
+                    Private
+                </option>
+            </select>
+        </div>
+        <button 
+        class="btn btn-default" 
+        type="submit"
+        ng-disabled="!postsEditCtrl.editedItem.text"
+        >
+            Save Post
+        </button>
+        <button
+        class="btn btn-danger"
+        type = "button"
+        ng-show="postsEditCtrl.cancel"
+        ng-click="postsEditCtrl.cancel()"
+        >
+            Cancel
+        </button>
+    </div>
+</form>

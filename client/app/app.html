@@ -8,13 +8,16 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Ideas</a>
+          <a class="navbar-brand" href="#" ng-click="appCtrl.setMode('home')">
+            <i class="fa fa-lightbulb-o" aria-hidden="true"></i>
+            Ideas
+          </a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
-            <li><a href="#">Link</a></li>
+            <li ><a href="#" ng-click="appCtrl.setMode('user')">User</a></li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
@@ -33,19 +36,23 @@
             <li>
                 <form class="navbar-form " role="search">
                 <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Search">
+                  <input type="text" ng-model="appCtrl.filter"  class="form-control" placeholder="Search">
                 </div>
                 <button type="submit" class="btn btn-default">Submit</button>
               </form>
             </li>
-            <li><a href="#">Link</a></li>
+            <li><a href="#" ng-click="appCtrl.setMode('post')">Posts</a></li>
           </ul>
         </div>
       </div>
     </nav>
 </header>
-<div class="container-fluid">
+<div class="container-fluid" ng-show="appCtrl.homeMode">
+    <img src="https://static.pexels.com/photos/5076/light-person-woman-fire.jpeg" alt="">
+</div>
+<div class="container-fluid" ng-show="appCtrl.userMode">
     <user-page/>
-    <hr>
-    <posts-page/>
+</div>
+<div class="container-fluid" ng-show="appCtrl.postMode">
+    <posts-page filter="appCtrl.filter"//>
 </div>

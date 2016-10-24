@@ -1,20 +1,20 @@
+<button class="btn btn-default "
+    ng-click="postsPageCtrl.setMode('add')">
+    <i class="fa fa-plus"></i>
+    Add Post
+</button>
+<posts-edit
+    ng-show = "postsPageCtrl.addMode "
+    post = "postsPageCtrl.editedItem"
+    save="postsPageCtrl.saveItem(editedItem)"
+    cancel="postsPageCtrl.setMode('false')"/>
+
 <div class="row">
-    <div class="col-xs-3" ng-repeat= "post in postsPageCtrl.posts">
-        <div class="card" >
-            <img class="card-img-top" src="http://www.howdesign.com/wp-content/uploads/shutterstock_928215491.jpg" alt="Card image cap">
-            <div class="card-block">
-                <p class="card-text">
-                    <li>
-                        Text: {{post.text}}
-                    </li>
-                    <li>
-                        Creadted by: {{post.user}}
-                    </li>
-                    <li>
-                        Creadted date: {{post.created_date | date}}
-                    </li>
-                </p>
-            </div>
-        </div>
-    </div>
+{{postsPageCtrl.posts}}
+<hr>
+<posts-item
+    ng-repeat= "post in postsPageCtrl.posts | filter: postsPageCtrl.filter track by post.id" 
+    post = "post"
+    delete ="postsPageCtrl.deleteItem(itemToDelete)"
+    update = "postsPageCtrl.updateItem(itemToUpdate)"/>
 </div>
