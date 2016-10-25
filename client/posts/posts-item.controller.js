@@ -27,5 +27,19 @@ function PostsItemController(){
         ctrl.post = itemToEdit;
         ctrl.editMode = false;
     };
+
+    ctrl.addUseMode = true;
+    ctrl.addUse = function addUse(){
+        ctrl.post.postusers.push(1);
+        ctrl.update({itemToUpdate:ctrl.post});
+        console.log("working adduse in item-controller");
+        ctrl.addUseMode = false;
+    };
+    ctrl.removeUse = function removeUse(){
+        ctrl.post.postusers.pop(1);
+        ctrl.update({itemToUpdate:ctrl.post});
+        console.log("working removeuse in item-controller");
+        ctrl.addUseMode = true;
+    };
 }
 export default PostsItemController

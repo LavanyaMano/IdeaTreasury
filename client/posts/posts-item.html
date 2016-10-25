@@ -9,6 +9,19 @@
                     <span class="badge pull-right">Category : {{postsItemCtrl.post.category}}</span>
                 </li>
                 <li>
+                    <button class="btn btn-warning "
+                    ng-click="postsItemCtrl.addUse()" ng-show="postsItemCtrl.addUseMode">
+                        <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+                    </button>
+                    <button class="btn btn-danger "
+                    ng-click="postsItemCtrl.removeUse()" ng-show="!postsItemCtrl.addUseMode">
+                        <i class="fa fa-ban" aria-hidden="true"></i>
+                    </button>
+                    <span class="badge pull-right">
+                    {{postsItemCtrl.post.postusers.length}}
+                    </span>
+                </li>
+                <li>
                     <button class="btn btn-info"
                     ng-click="postsItemCtrl.setMode('edit')">
                         <i class="fa fa-pencil"></i>

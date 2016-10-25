@@ -53,6 +53,16 @@ function PostsPageController(postsAPIService,$interval){
             console.log('Item removed! : This is from posts-page-controller');
         });
     };
+    ctrl.addUse = function addUse(postToUse){
+        const index =findIndex(item => postToUse.id === item.id)(ctrl.posts);
+            if(index !== -1) {
+                ctrl.posts.add_use(index,1);
+            }
+        postsAPIService.posts.update(postToUse).$promise.then(() => {
+            //flashesService.displayMessage('Item removed!',"danger");
+            console.log('post used! : This is from posts-page-controller');
+        });
+    };
 
 }
 
