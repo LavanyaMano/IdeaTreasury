@@ -1,6 +1,8 @@
 from django.db import models
 from user_profiles.models import User
 
+
+
 class Posts(models.Model):
     user =models.ForeignKey(User)
     title = models.CharField(max_length = 100,blank=True,default="Title")
@@ -10,6 +12,7 @@ class Posts(models.Model):
     visible = models.BooleanField(default=True)
     postusers = models.ManyToManyField(User,blank=True,
     null=True,related_name= "postusing")
+
 
     ART = "Art"
     SCIENCE = "Science"
@@ -26,5 +29,32 @@ class Posts(models.Model):
     category = models.CharField(max_length=50, 
         default=ART, choices=CHOICES)
 
+    def __str__(self):
+        return self.title
+
+    def avg_rating(self):
+        raw_list = self.rate_set.all()
+        length = len(raw_list)
+        users_list = []
+        rate_list = []
+        total = 0;
+        if (length>0):
+            for a in range(length):
+                if(raw_list[a].rated_by_id not in users_list):
+                    users_list.append(raw_list[a].rated_by_id)
+                    rate_list.append(raw_list[a].rating)
+            for a in range(len(users_list)):
+                total += rate_list[a]
+            return total/len(users_list)
+
+
+
+class Rate(models.Model):
+    rating = models.DecimalField(max_digits=10000, decimal_places=0,default=0)
+    rated_by = models.ForeignKey(User,blank=True,null=True)
+    post_rated = models.ForeignKey(Posts,blank=True,null=True)
+
+    def __str__(self):
+        return str(self.rating)
 
 

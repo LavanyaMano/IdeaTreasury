@@ -7,6 +7,7 @@ const postsItemComponent = {
         post:'<',
         delete:'&',
         update:'&',
+        save:'&',
     },
     controller: PostsItemController,
     controllerAs:'postsItemCtrl',

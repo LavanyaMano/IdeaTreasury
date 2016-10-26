@@ -7,6 +7,8 @@ function postsAPIService($resource){
                     method:'PUT',
                 },
             }),
+        rate:$resource('/api/rate/:id/',
+            {id:'@id'},),
     }
     return api;
 }

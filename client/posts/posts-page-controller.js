@@ -12,8 +12,12 @@ function PostsPageController(postsAPIService,$interval){
             ctrl.itemsCount = ctrl.posts.length;
         });
     }
+    
     getPosts();
+
+
     $interval(getPosts,9000);
+
 
     ctrl.setMode = function setMode(mode){
         if (mode == "add"){
@@ -63,6 +67,33 @@ function PostsPageController(postsAPIService,$interval){
             console.log('post used! : This is from posts-page-controller');
         });
     };
+
+    //Rate API, getting rate API, updating rate API.
+
+    function getRate(){
+        postsAPIService.rate.get().$promise.then((data)=>{
+            ctrl.rate = data.results;
+        });
+    }
+    getRate();
+    $interval(getRate,9000);
+    ctrl.rateItem = function rateItem(itemToRate){
+        postsAPIService.rate.save(itemToRate).$promise.then((savedItem) =>{
+            ctrl.rate =[
+                savedItem,
+                ...ctrl.rate,
+            ];
+            ctrl.itemToRate={};
+            //flashesService.displayMessage('Item added!','success');
+            console.log('Ratings added! : This is from posts-page-controller');
+        });
+    };
+    // ctrl.rateItem = function rateItem(){
+    //     postsAPIService.rate.save(itemToRate).$promise.then(() =>{
+    //         //flashesService.displayMessage('Item is update!','warning');
+    //         console.log('Ratings updated! : This is from posts-page-controller');
+    //     });
+    //};
 
 }
 

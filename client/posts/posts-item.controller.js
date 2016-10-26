@@ -5,6 +5,7 @@ function PostsItemController(){
     ctrl.showControls =false;
     ctrl.itemToEdit={};
     ctrl.editMode = false;
+    ctrl.editRate ={};
 
     ctrl.setShowControls = function setShowControls(showControls){
         ctrl.showControls = showControls;
@@ -28,6 +29,8 @@ function PostsItemController(){
         ctrl.editMode = false;
     };
 
+    //adding use and undo use of post by users section
+
     ctrl.addUseMode = true;
     ctrl.addUse = function addUse(){
         ctrl.post.postusers.push(1);
@@ -41,5 +44,24 @@ function PostsItemController(){
         console.log("working removeuse in item-controller");
         ctrl.addUseMode = true;
     };
+
+    //rating the post section 
+
+    ctrl.rateMode=false;
+    ctrl.rating = 1;
+    ctrl.setRateMode = function setRateMode(mode){
+        ctrl.rateMode=true;
+        console.log("rateMode = true")
+    };
+    ctrl.addRate = function addRate(){
+        ctrl.itemToEdit={};
+        ctrl.itemToEdit.rating = ctrl.rating;
+        ctrl.itemToEdit.rated_by = 2;
+        ctrl.itemToEdit.post_rated = ctrl.post.id;
+        ctrl.save({itemToRate:ctrl.itemToEdit});
+        console.log("working rating in item-controller");
+        ctrl.rateMode=false;
+    };
+
 }
 export default PostsItemController

@@ -8,36 +8,86 @@
                 <li>
                     <span class="badge pull-right">Category : {{postsItemCtrl.post.category}}</span>
                 </li>
+                <li class="dropdown">
+              <a href="#" class="dropdown-toggle btn btn-info" data-toggle="dropdown" role="button" aria-expanded=""><span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li 
+                ng-show="postsItemCtrl.addUseMode">
+                    <a href="#" 
+                    ng-click="postsItemCtrl.addUse()"  >
+                        Use
+                    </a>
+                </li>
+                <li
+                ng-show="!postsItemCtrl.addUseMode">
+                    <a href="#" 
+                    ng-click="postsItemCtrl.removeUse()" 
+                    >
+                        Undo-Use
+                    </a>
+                </li>
                 <li>
-                    <button class="btn btn-warning "
-                    ng-click="postsItemCtrl.addUse()" ng-show="postsItemCtrl.addUseMode">
-                        <i class="fa fa-thumbs-up" aria-hidden="true"></i>
-                    </button>
-                    <button class="btn btn-danger "
-                    ng-click="postsItemCtrl.removeUse()" ng-show="!postsItemCtrl.addUseMode">
-                        <i class="fa fa-ban" aria-hidden="true"></i>
-                    </button>
-                    <span class="badge pull-right">
-                    {{postsItemCtrl.post.postusers.length}}
+                    <a href="#"
+                    ng-click="postsItemCtrl.setRateMode()" >
+                        Rate
+                    </a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="#" 
+                    ng-click="postsItemCtrl.setMode('edit')">
+                        Edit
+                    </a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="#"
+                    ng-click="postsItemCtrl.deleteItem()">
+                        Delete
+                    </a>
+                </li>
+              </ul>
+              <li ng-show="postsItemCtrl.rateMode">
+                    <select name="rating" ng-model="postsItemCtrl.rating" >
+                        <option value=1 >
+                            1
+                        </option>
+                        <option value=2>
+                            2
+                        </option>
+                        <option value=3>
+                            3
+                        </option>
+                        <option value=4>
+                            4
+                        </option>
+                        <option value=5>
+                            5
+                        </option>
+                    </select>
+                    <button class="btn btn-info" ng-click="postsItemCtrl.addRate()">ok</button>
+                </li>
+            </li>
+                <li>
+                    <span class="badge">
+                    Users: {{postsItemCtrl.post.postusers.length}} 
                     </span>
                 </li>
                 <li>
-                    <button class="btn btn-info"
-                    ng-click="postsItemCtrl.setMode('edit')">
-                        <i class="fa fa-pencil"></i>
-                    </button>
-                </li>
-                <li>
-                    <button class="btn btn-danger "
-                    ng-click="postsItemCtrl.deleteItem()">
-                        <i class="fa fa-trash-o"></i>
-                    </button>
+                    <span class="badge">
+                    Ratings: {{postsItemCtrl.post.avg_rating | number:0}}
+                    </span>
                 </li>
             </ul>
+
         </div>
+
         <div class="panel-body">
-            Text: {{postsItemCtrl.post.text}}
-            Reference: {{postsItemCtrl.post.reference}}
+            <ul>
+                <li>Title: {{postsItemCtrl.post.title}}</li>
+                <li>Text: {{postsItemCtrl.post.text}}</li>
+                <li>Reference: {{postsItemCtrl.post.reference}}</li>
+            </ul>
         </div>
         <div class="panel-footer">
             Creadted date: {{postsItemCtrl.post.created_date | date}}
