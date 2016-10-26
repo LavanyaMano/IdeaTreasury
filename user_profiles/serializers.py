@@ -9,4 +9,5 @@ class UserSerializer(serializers.ModelSerializer):
             'username',
             'email',
             'joined',
-            'postusing',)
+            'postusing',
+            'rating_user')
