@@ -12,7 +12,8 @@ class Posts(models.Model):
     visible = models.BooleanField(default=True)
     postusers = models.ManyToManyField(User,blank=True,
     null=True,related_name= "postusing")
-
+    likes = models.ManyToManyField(User,blank=True,
+    null=True,related_name= "liked_post")
 
     ART = "Art"
     SCIENCE = "Science"

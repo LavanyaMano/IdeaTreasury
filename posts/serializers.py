@@ -15,7 +15,8 @@ class PostSerializer(serializers.ModelSerializer):
             'category',
             'visible',
             'postusers',
-            'avg_rating'
+            'avg_rating',
+            'likes'
             )
 
 class RateSerializer(serializers.ModelSerializer):

@@ -26,12 +26,28 @@
                         Undo-Use
                     </a>
                 </li>
+                <li 
+                ng-show="postsItemCtrl.addLikeMode">
+                    <a href="#" 
+                    ng-click="postsItemCtrl.addLike()"  >
+                        Like
+                    </a>
+                </li>
+                <li
+                ng-show="!postsItemCtrl.addLikeMode">
+                    <a href="#" 
+                    ng-click="postsItemCtrl.removeLike()" 
+                    >
+                        Undo-Like
+                    </a>
+                </li>
                 <li>
                     <a href="#"
                     ng-click="postsItemCtrl.setRateMode()" >
                         Rate
                     </a>
                 </li>
+
                 <li class="divider"></li>
                 <li>
                     <a href="#" 
@@ -71,6 +87,11 @@
                 <li>
                     <span class="badge">
                     Users: {{postsItemCtrl.post.postusers.length}} 
+                    </span>
+                </li>
+                <li>
+                    <span class="badge">
+                    Likes: {{postsItemCtrl.post.likes.length}} 
                     </span>
                 </li>
                 <li>

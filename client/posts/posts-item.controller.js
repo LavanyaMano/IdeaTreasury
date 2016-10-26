@@ -45,6 +45,22 @@ function PostsItemController(){
         ctrl.addUseMode = true;
     };
 
+    //adding Like and undo Like of post by Likes section
+
+    ctrl.addLikeMode = true;
+    ctrl.addLike = function addLike(){
+        ctrl.post.likes.push(1);
+        ctrl.update({itemToUpdate:ctrl.post});
+        console.log("working addLike in item-controller");
+        ctrl.addLikeMode = false;
+    };
+    ctrl.removeLike = function removeLike(){
+        ctrl.post.likes.pop(1);
+        ctrl.update({itemToUpdate:ctrl.post});
+        console.log("working removeLike in item-controller");
+        ctrl.addLikeMode = true;
+    };
+
     //rating the post section 
 
     ctrl.rateMode=false;

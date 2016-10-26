@@ -19,16 +19,22 @@ class User(AbstractBaseUser):
         post_rating = 0
         if(no_of_posts>0):
             for a in range(no_of_posts):
+                if raw_list[a].postusers:
+                    raw_postusers = raw_list[a].postusers.all()
+                    no_of_postusers = len(raw_postusers)
+                if raw_list[a].likes:
+                    raw_postlikes = raw_list[a].likes.all()
+                    no_of_postlikes =len(raw_postlikes)
                 if raw_list[a].avg_rating():
                     post_rating = post_rating + raw_list[a].avg_rating()
 
-        total = (no_of_posts ) + (post_rating * 10)
+        total = (no_of_posts ) + (post_rating) + (no_of_postusers )+ (no_of_postlikes)
         if total > 100:
-            return 5
+            return total
         elif (total <= 100 and total > 50):
-            return 2
+            return total
         elif total < 50:
-            return 1
+            return total
 
 
 

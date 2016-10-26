@@ -10,4 +10,5 @@ class UserSerializer(serializers.ModelSerializer):
             'email',
             'joined',
             'postusing',
-            'rating_user')
+            'rating_user',
+            'liked_post')
