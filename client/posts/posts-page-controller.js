@@ -88,12 +88,40 @@ function PostsPageController(postsAPIService,$interval){
             console.log('Ratings added! : This is from posts-page-controller');
         });
     };
-    // ctrl.rateItem = function rateItem(){
-    //     postsAPIService.rate.save(itemToRate).$promise.then(() =>{
-    //         //flashesService.displayMessage('Item is update!','warning');
-    //         console.log('Ratings updated! : This is from posts-page-controller');
-    //     });
-    //};
+
+    //commenting on post, posting comment, commented by, post-commented on to comment API.
+    function getComment(){
+        postsAPIService.comment.get().$promise.then((data)=>{
+            ctrl.comment= data.results;
+        });
+    }
+    getComment();
+    $interval(getComment,9000);
+
+    ctrl.commentItem = function commentItem(itemToComment){
+        postsAPIService.comment.postcomment(itemToComment).$promise.then((savedItem) =>{
+            ctrl.comment=[
+                savedItem,
+                ...ctrl.comment,
+            ];
+            ctrl.itemToComment={};
+            //flashesService.displayMessage('Item added!','success');
+            console.log('comments added! : This is from posts-page-controller');
+        });
+    };
+
+    //changing comment.read == true
+    ctrl.commentChange = function commentChange(itemToComment){
+        postsAPIService.comment.changecomment(itemToComment).$promise.then((savedItem) =>{
+            ctrl.comment=[
+                savedItem,
+                ...ctrl.comment,
+            ];
+            ctrl.itemToComment={};
+            //flashesService.displayMessage('Item added!','success');
+            console.log('comments changed! : This is from posts-page-controller');
+        });
+    };
 
 }
 

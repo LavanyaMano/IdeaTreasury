@@ -10,8 +10,7 @@ class Posts(models.Model):
     reference = models.CharField(max_length = 100, blank=True, default="Own")
     created_date = models.DateTimeField(auto_now_add = True)
     visible = models.BooleanField(default=True)
-    postusers = models.ManyToManyField(User,blank=True,
-    null=True,related_name= "postusing")
+    postusers = models.ManyToManyField(User,blank=True,null=True,related_name= "postusing")
     likes = models.ManyToManyField(User,blank=True,
     null=True,related_name= "liked_post")
 
@@ -30,8 +29,6 @@ class Posts(models.Model):
     category = models.CharField(max_length=50, 
         default=ART, choices=CHOICES)
 
-    def __str__(self):
-        return self.title
 
     def avg_rating(self):
         raw_list = self.rate_set.all()
@@ -48,6 +45,19 @@ class Posts(models.Model):
                 total += rate_list[a]
             return total/len(users_list)
 
+    def comment_new(self):
+        raw_list = self.comment_set.all()
+        length = len(raw_list)
+        new = []
+        if(length>0):
+            for a in range(length):
+                if raw_list[a].read == False : 
+                    new.append(raw_list[a]) 
+        return len(new)
+
+
+    def __str__(self):
+            return self.title
 
 
 class Rate(models.Model):
@@ -57,5 +67,14 @@ class Rate(models.Model):
 
     def __str__(self):
         return str(self.rating)
+
+class Comment(models.Model):
+    comment = models.CharField(max_length = 500,blank=True,null=True)
+    comment_by = models.ForeignKey(User,blank=True,null=True)
+    post_comment = models.ForeignKey(Posts,blank=True,null=True)
+    read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.comment
 
 

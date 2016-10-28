@@ -8,6 +8,8 @@ const postsItemComponent = {
         delete:'&',
         update:'&',
         save:'&',
+        postcomment:'&',
+        changecomment:'&',
     },
     controller: PostsItemController,
     controllerAs:'postsItemCtrl',

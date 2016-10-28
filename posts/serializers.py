@@ -1,8 +1,18 @@
 from rest_framework import serializers
-from .models import Posts,Rate
+from .models import Posts,Rate, Comment
 
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = (
+            'id',
+            'comment',
+            'comment_by',
+            'post_comment',
+            'read')
 
 class PostSerializer(serializers.ModelSerializer):
+    comment_set = CommentSerializer(many=True)
     class Meta:
         model = Posts
         fields = (
@@ -16,7 +26,9 @@ class PostSerializer(serializers.ModelSerializer):
             'visible',
             'postusers',
             'avg_rating',
-            'likes'
+            'likes',
+            'comment_set',
+            'comment_new'
             )
 
 class RateSerializer(serializers.ModelSerializer):
@@ -27,3 +39,4 @@ class RateSerializer(serializers.ModelSerializer):
             'rating',
             'rated_by',
             'post_rated')
+

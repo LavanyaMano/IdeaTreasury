@@ -1,6 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser
-
+from django.contrib.auth.models import AbstractBaseUser, UserManager
 
 
 class User(AbstractBaseUser):
@@ -9,6 +8,7 @@ class User(AbstractBaseUser):
     joined = models.DateTimeField(auto_now_add=True)
     education = models.CharField(max_length=10,blank=True)
     occupation = models.CharField(max_length=10,blank=True)
+    USERNAME_FIELD = 'username'
 
     def __str__(self):
         return self.username
@@ -28,13 +28,21 @@ class User(AbstractBaseUser):
                 if raw_list[a].avg_rating():
                     post_rating = post_rating + raw_list[a].avg_rating()
 
-        total = (no_of_posts ) + (post_rating) + (no_of_postusers )+ (no_of_postlikes)
-        if total > 100:
-            return total
-        elif (total <= 100 and total > 50):
-            return total
-        elif total < 50:
-            return total
+            total = (no_of_posts ) + (post_rating) + (no_of_postusers )+ (no_of_postlikes)
+            if total > 100:
+                return total
+            elif (total <= 100 and total > 50):
+                return total
+            elif total < 50:
+                return total
 
+    def comment_notification(self):
+        raw_list = self.posts_set.all()
+        no_of_posts = len(raw_list)
+        new_comments = 0
+        if(no_of_posts>0):
+            for a in range(no_of_posts):
+                new_comments += raw_list[a].comment_new()
+        return new_comments
 
 

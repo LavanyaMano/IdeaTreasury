@@ -10,13 +10,17 @@
     cancel="postsPageCtrl.setMode('false')"/>
 
 <div class="row">
-{{postsPageCtrl.posts}}
-<hr>
+
+
 <posts-item
     ng-repeat= "post in postsPageCtrl.posts | filter: postsPageCtrl.filter track by post.id" 
     post = "post"
     delete ="postsPageCtrl.deleteItem(itemToDelete)"
     update = "postsPageCtrl.updateItem(itemToUpdate)"
     save = "postsPageCtrl.rateItem(itemToRate)"
+    postcomment = "postsPageCtrl.commentItem(itemToComment)"
+    changecomment = "postsPageCtrl.commentChange(itemToComment)"
     />
+<hr>
+{{postsPageCtrl.posts}}
 </div>

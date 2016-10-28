@@ -7,8 +7,20 @@ function postsAPIService($resource){
                     method:'PUT',
                 },
             }),
+
         rate:$resource('/api/rate/:id/',
             {id:'@id'},),
+
+        comment:$resource('/api/comment/:id/',
+            {id:'@id'},
+            {
+                postcomment:{
+                    method:'POST',
+                },
+                changecomment:{
+                    method:'PUT',
+                },
+            },),
     }
     return api;
 }

@@ -6,9 +6,11 @@ function userAPIService($resource){
                 update:{
                     method:'PUT',
                 },
-            }),
+            },),
     }
     return api;
 }
 
 export default userAPIService;
+
+

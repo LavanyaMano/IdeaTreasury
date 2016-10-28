@@ -1,7 +1,11 @@
 from rest_framework import serializers
 from .models import User
 
+
+
+        
 class UserSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = User
         fields = (
@@ -11,4 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
             'joined',
             'postusing',
             'rating_user',
-            'liked_post')
+            'liked_post',
+            'comment_notification')
+
+

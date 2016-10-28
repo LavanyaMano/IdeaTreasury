@@ -6,6 +6,8 @@ function PostsItemController(){
     ctrl.itemToEdit={};
     ctrl.editMode = false;
     ctrl.editRate ={};
+    ctrl.itemToComment = {};
+    ctrl.selectedComment = ctrl.post.comment_set[0]
 
     ctrl.setShowControls = function setShowControls(showControls){
         ctrl.showControls = showControls;
@@ -28,6 +30,7 @@ function PostsItemController(){
         ctrl.post = itemToEdit;
         ctrl.editMode = false;
     };
+
 
     //adding use and undo use of post by users section
 
@@ -62,9 +65,8 @@ function PostsItemController(){
     };
 
     //rating the post section 
-
-    ctrl.rateMode=false;
     ctrl.rating = 1;
+    ctrl.rateMode=false;
     ctrl.setRateMode = function setRateMode(mode){
         ctrl.rateMode=true;
         console.log("rateMode = true")
@@ -77,6 +79,29 @@ function PostsItemController(){
         ctrl.save({itemToRate:ctrl.itemToEdit});
         console.log("working rating in item-controller");
         ctrl.rateMode=false;
+    };
+
+    //comment the post section and mark as read
+
+    ctrl.addComment = function addComment(){
+        if(ctrl.itemToComment.comment != null){
+            ctrl.itemToComment.comment_by = 2;
+            ctrl.itemToComment.post_comment = ctrl.post.id;
+            ctrl.itemToComment.read = false;
+            ctrl.postcomment({itemToComment:ctrl.itemToComment});
+        }
+        else{
+            console.log("enter something to comment");
+        }
+        console.log("working === comment in item-controller");
+        ctrl.itemToComment={};
+    };
+    ctrl.changeComment = function changeComment(id){
+        ctrl.itemToComment.id = id;
+        ctrl.itemToComment.read = true;
+        ctrl.itemToComment.post_comment = ctrl.post.id;
+        ctrl.changecomment({itemToComment:ctrl.itemToComment});
+        console.log("mark as read in item-controller");
     };
 
 }
