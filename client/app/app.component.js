@@ -8,3 +8,4 @@ const appComponent = {
 };
 
 export default appComponent;
+

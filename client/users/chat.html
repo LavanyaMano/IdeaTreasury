@@ -1,0 +1,12 @@
+<ul class="nav nav-pills nav-stacked">
+  <li class="active">
+  <a href="#">{{chatCtrl.profile.receiver.message}}</a></li>
+  <li><a href="#">{{chatCtrl.profile.receiver.message}}</a>
+  </li>
+</ul>
+<form ng-submit="chatCtrl.saveChat()">
+send to : 
+<input ng-model="chatCtrl.ChatItem.receiver" class="form-control" placeholder="options are 2,3,4">
+
+<input ng-model="chatCtrl.ChatItem.message" class="form-control" placeholder="message here" >
+</form>

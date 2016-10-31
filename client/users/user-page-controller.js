@@ -13,32 +13,22 @@ function UserPageController(userAPIService,$interval){
     getUser();
     $interval(getUser,9000);
 
-
-//login data posting to login api
-    ctrl.login = function login(loginItem){
-        userAPIService.login.save(loginItem).$promise.then((savedItem) =>{
-            ctrl.login =[
-                savedItem,
-                ...ctrl.login,
-            ];
-            ctrl.loginItem={};
-
-            //flashesService.displayMessage('Item added!','success');
-            console.log('Logged in! : This is from posts-page-controller');
+    //saving chat messages
+    function getChat(){
+        userAPIService.chat.get().$promise.then((data)=>{
+            ctrl.chat = data.results;
         });
-    };
-
-//register new user through rest-auth/registration api
-    ctrl.signupUser = function signupUser(signupItem){
-        userAPIService.signup.sign(signupItem).$promise.then((savedItem) =>{
-            ctrl.signup =[
+    }
+    getChat();
+    $interval(getChat,9000);
+    ctrl.saveChat= function saveChat(editedItem){
+        userAPIService.chat.save(editedItem).$promise.then((savedItem) =>{
+            ctrl.chat =[
                 savedItem,
-                ...ctrl.signup,
+                ...ctrl.chat,
             ];
-            ctrl.loginItem={};
-
-            //flashesService.displayMessage('Item added!','success');
-            console.log('signed up! : This is from posts-page-controller');
+            //flashesService.displayMessage('Chatadded!','success');
+            console.log('Chatadded! : This is from posts-page-controller');
         });
     };
 }

@@ -1,13 +1,22 @@
 from rest_framework import serializers
-from .models import User
+from .models import UserProfile,Chat
 
 
-
-        
-class UserSerializer(serializers.ModelSerializer):
-
+class ChatSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = Chat
+        fields = (
+            'id',
+            'message',
+            'sender',
+            'receiver',
+            'read')
+
+
+class UserSerializer(serializers.ModelSerializer):
+    receiver = ChatSerializer(many=True)
+    class Meta:
+        model = UserProfile
         fields = (
             'id',
             'username',
@@ -16,6 +25,8 @@ class UserSerializer(serializers.ModelSerializer):
             'postusing',
             'rating_user',
             'liked_post',
-            'comment_notification')
+            'comment_notification',
+            'chat_notification',
+            'receiver')
 
 

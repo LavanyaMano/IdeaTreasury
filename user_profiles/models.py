@@ -1,17 +1,27 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, UserManager
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save 
+from django.dispatch import receiver
 
-
-class User(AbstractBaseUser):
-    username = models.CharField('username', max_length=10, unique=True, db_index=True)
-    email = models.EmailField('email address', unique=True)
+class UserProfile(models.Model):
+    user = models.OneToOneField(User)
+    # username = models.CharField('username', max_length=10, unique=True, db_index=True)
+    # email = models.EmailField('email address', unique=True)
     joined = models.DateTimeField(auto_now_add=True)
     education = models.CharField(max_length=10,blank=True)
     occupation = models.CharField(max_length=10,blank=True)
-    USERNAME_FIELD = 'username'
+
+
+    def username(self):
+        username=self.user.username 
+        return username
+
+    def email(self):
+        email = self.user.email
+        return email
 
     def __str__(self):
-        return self.username
+        return self.username()
 
     def rating_user(self):
         raw_list = self.posts_set.all()
@@ -45,4 +55,27 @@ class User(AbstractBaseUser):
                 new_comments += raw_list[a].comment_new()
         return new_comments
 
+    def chat_notification(self):
+        raw_list=self.receiver.all()
+        length = len(raw_list)
+        unread = []
+        if (length>0):
+            for a in range(length):
+                if raw_list[a].read == False : 
+                    unread.append(raw_list[a]) 
+        return len(unread)
 
+@receiver(post_save, sender=User) 
+def create_profile(sender, instance, created, **kwargs): 
+    """Create a matching profile whenever a user object is created.""" 
+    if created: 
+        profile, new = UserProfile.objects.get_or_create(user=instance)
+
+class Chat(models.Model):
+    message = models.CharField(max_length = 500,blank=True,null=True)
+    sender = models.ForeignKey(UserProfile,blank=True,null=True,related_name="sender")
+    receiver = models.ForeignKey(UserProfile,blank=True,null=True,related_name="receiver")
+    read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.message

@@ -1,5 +1,6 @@
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from django.core.urlresolvers import reverse_lazy
 
 from unipath import Path
 
@@ -37,19 +38,19 @@ INSTALLED_APPS = (
     'api',
     'user_profiles',
     'posts',
+    'accounts',
     'rest_auth',
 
 )
 
 SITE_ID = 1
-AUTH_USER_MODEL = 'user_profiles.User'
+# AUTH_USER_MODEL = 'user_profiles.User'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-    )
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
 
 MIDDLEWARE_CLASSES = (
@@ -117,6 +118,9 @@ USE_L10N = True
 USE_TZ = True
 
 
+LOGIN_REDIRECT_URL = reverse_lazy('posts:app')
+LOGIN_URL = reverse_lazy('accounts:login')
+LOGOUT_URL = reverse_lazy('accounts:logout')
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 

@@ -1,17 +1,17 @@
 from django.db import models
-from user_profiles.models import User
+from user_profiles.models import UserProfile
 
 
 
 class Posts(models.Model):
-    user =models.ForeignKey(User)
-    title = models.CharField(max_length = 100,blank=True,default="Title")
+    user =models.ForeignKey(UserProfile)
+    title = models.CharField(max_length = 100,default="Title")
     text = models.CharField(max_length = 500,blank=True,null=True)
     reference = models.CharField(max_length = 100, blank=True, default="Own")
     created_date = models.DateTimeField(auto_now_add = True)
     visible = models.BooleanField(default=True)
-    postusers = models.ManyToManyField(User,blank=True,null=True,related_name= "postusing")
-    likes = models.ManyToManyField(User,blank=True,
+    postusers = models.ManyToManyField(UserProfile,blank=True,null=True,related_name= "postusing")
+    likes = models.ManyToManyField(UserProfile,blank=True,
     null=True,related_name= "liked_post")
 
     ART = "Art"
@@ -57,12 +57,12 @@ class Posts(models.Model):
 
 
     def __str__(self):
-            return self.title
+        return str(self.title)
 
 
 class Rate(models.Model):
     rating = models.DecimalField(max_digits=10000, decimal_places=0,default=0)
-    rated_by = models.ForeignKey(User,blank=True,null=True)
+    rated_by = models.ForeignKey(UserProfile,blank=True,null=True)
     post_rated = models.ForeignKey(Posts,blank=True,null=True)
 
     def __str__(self):
@@ -70,11 +70,11 @@ class Rate(models.Model):
 
 class Comment(models.Model):
     comment = models.CharField(max_length = 500,blank=True,null=True)
-    comment_by = models.ForeignKey(User,blank=True,null=True)
+    comment_by = models.ForeignKey(UserProfile,blank=True,null=True)
     post_comment = models.ForeignKey(Posts,blank=True,null=True)
     read = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.comment
+        return str(self.comment)
 
 

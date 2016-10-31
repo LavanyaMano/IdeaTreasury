@@ -7,6 +7,8 @@ function userAPIService($resource){
                     method:'PUT',
                 },
             },),
+        chat:$resource('/api/chat/:id/',
+            {id:'@id'},),
     }
     return api;
 }

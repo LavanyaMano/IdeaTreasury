@@ -1,30 +1,59 @@
-
 <div class="row">
-    <div class="col-xs-3" ng-repeat= "profile in userPageCtrl.user">
-        <div class="card" >
-            <img class="card-img-top" src="https://d2wucpkmh57zie.cloudfront.net/wp-content/uploads/2015/10/stocksnap.jpg" alt="Card image cap">
-            <div class="card-block">
-                <p class="card-text">
-                    <li>
-                        user: {{profile.username}}
-                    </li>
-                    <li>
-                        email: {{profile.email}}
-                    </li>
-                    <li>
-                        PostsUsing: {{profile.postusing}}
-                    </li>
-                    <li>
-                        PostsLiked: {{profile.liked_post}}
-                    </li>
-                    <li>
-                        UserRating: {{profile.rating_user}}
-                    </li>
-                    <li>
-                        Notification for comments: {{profile.comment_notification}}
-                    </li>
-                </p>
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-xs-3" ng-repeat= "profile in userPageCtrl.user track by profile.id">
+                <div class="card" >
+                    <img class="card-img-top" src="https://d2wucpkmh57zie.cloudfront.net/wp-content/uploads/2015/10/stocksnap.jpg" alt="Card image cap">
+                    <div class="card-block">
+                        <p class="card-text">
+                            <li>
+                                user: {{profile.username}}
+                            </li>
+                            <li>
+                                email: {{profile.email}}
+                            </li>
+                            <li>
+                                PostsUsing: {{profile.postusing}}
+                            </li>
+                            <li>
+                                PostsLiked: {{profile.liked_post}}
+                            </li>
+                            <li>
+                                UserRating: {{profile.rating_user}}
+                            </li>
+                            <li>
+                                Notification for comments: {{profile.comment_notification}}
+                            </li>
+<ul ng-show="profile.receiver[0]">
+message:  ({{profile.receiver.length}})
+
+<li ng-repeat="data in profile.receiver" ng-show="!data.read">
+<a href="#" ng-click="userPageCtrl.changeChat(data.id)">
+{{data.message}} by {{data.sender}}
+</a> 
+</li>
+<li ng-repeat="data in profile.receiver" ng-show="data.read">
+{{data.message}} by {{data.sender}}
+</li>
+</ul>
+
+<form ng-submit="userPageCtrl.addChat(data.id)">
+<input ng-model="userPageCtrl.itemToChat.message" class="form-control" placeholder="comment here" >
+</form>
+                        </p>
+                    </div>
+                </div>
             </div>
+        </div>
+        <div class="row">
+        <div class="col-xs-3">
+            <h4>CHAT BOX</h4>
+        <chat
+        profile = "profile"
+        save = "userPageCtrl.chatSave(chatToSave
+        )"/>
+        </div>
+        
         </div>
     </div>
 </div>
