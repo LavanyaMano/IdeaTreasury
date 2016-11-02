@@ -30,17 +30,18 @@ class PostSerializer(serializers.ModelSerializer):
             'comment_set',
             'comment_new'
             )
-        read_only_fields = (
-            'title',
-            'text',
-            'reference',
-            'created_date',
-            'category',
-            'visible',
-            'postusers',
-            'avg_rating',
-            'likes',
-            'comment_set',)
+        # read_only_fields = (
+        #     'user',
+        #     'title',
+        #     'text',
+        #     'reference',
+        #     'created_date',
+        #     'category',
+        #     'visible',
+        #     'postusers',
+        #     'avg_rating',
+        #     'likes',
+        #     'comment_set',)
 
 
 class PutPostSerializer(serializers.ModelSerializer):
@@ -49,7 +50,6 @@ class PutPostSerializer(serializers.ModelSerializer):
         model = Posts
         fields = (
             'id',
-            'user',
             'title',
             'text',
             'reference',

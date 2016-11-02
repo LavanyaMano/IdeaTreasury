@@ -7,10 +7,9 @@ from .models import Posts
 from .serializers import PutPostSerializer
 from .permissions import IsOwnerOrReadOnly
 
-class ScreenshotUpload(generics.CreateAPIView):
+class PutPost(generics.CreateAPIView):
     model = Posts
     serializer_class = PutPostSerializer
-    parser_classes = (MultiPartParser,)
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly, )
 
     def perform_create(self, serializer):

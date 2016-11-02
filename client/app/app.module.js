@@ -20,7 +20,7 @@ const AppModule = angular.module('app', [
         $stateProvider
         .state('otherwise',{
             url:'/',
-            component:'appComponent',
+           
         })
         .state('user', {
             url: '/user',
