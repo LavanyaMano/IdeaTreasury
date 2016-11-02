@@ -9,7 +9,9 @@ from .permissions import IsOwnerOrReadOnly
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Posts.objects.all().order_by('-created_date')
     serializer_class = PostSerializer
-    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly, )
+    permission_classes = (IsAuthenticated,IsOwnerOrReadOnly, )
+    def perform_create(self,serializer):
+        serializer.save(user = self.request.user.userprofile)
 
 class RateViewSet(viewsets.ModelViewSet):
     queryset = Rate.objects.all()

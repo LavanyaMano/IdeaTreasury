@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Posts,Rate, Comment
+from user_profiles.serializers import UserSerializer
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,56 +13,36 @@ class CommentSerializer(serializers.ModelSerializer):
             'read')
 
 class PostSerializer(serializers.ModelSerializer):
-    comment_set = CommentSerializer(many=True)
+    comment_set = CommentSerializer(many=True, read_only = True)
+    username = serializers.SerializerMethodField()
+
+    def get_username(self, post):
+        return post.user.username()
+
     class Meta:
         model = Posts
         fields = (
             'id',
+            'username',
+            'title',
+            'text',
+            'reference',
+            'created_date',
+            'category',
+            'visible',
+            'postusers',
+            'avg_rating',
+            'likes',
+            'comment_set',
+            'comment_new',
+            )
+        read_only_fields = (
             'user',
-            'title',
-            'text',
-            'reference',
             'created_date',
-            'category',
-            'visible',
-            'postusers',
             'avg_rating',
-            'likes',
-            'comment_set',
-            'comment_new'
-            )
-        # read_only_fields = (
-        #     'user',
-        #     'title',
-        #     'text',
-        #     'reference',
-        #     'created_date',
-        #     'category',
-        #     'visible',
-        #     'postusers',
-        #     'avg_rating',
-        #     'likes',
-        #     'comment_set',)
+            'comment_new')
 
 
-class PutPostSerializer(serializers.ModelSerializer):
-    comment_set = CommentSerializer(many=True)
-    class Meta:
-        model = Posts
-        fields = (
-            'id',
-            'title',
-            'text',
-            'reference',
-            'created_date',
-            'category',
-            'visible',
-            'postusers',
-            'avg_rating',
-            'likes',
-            'comment_set',
-            'comment_new'
-            )
 
 class RateSerializer(serializers.ModelSerializer):
     class Meta:

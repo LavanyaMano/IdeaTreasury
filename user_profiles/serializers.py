@@ -15,6 +15,8 @@ class ChatSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     receiver = ChatSerializer(many=True)
+    # def get_receiver(self,userprofile):
+    #     return userprofile.receiver.username()
     class Meta:
         model = UserProfile
         fields = (
