@@ -3,6 +3,170 @@
         <div class="panel-heading">
             <ul class="nav nav-pills">
                 <li>
+                    <h3 class="panel-title">
+                     <a href="#" data-toggle="modal" data-target="#myModal">
+                    Created by: {{postsItemCtrl.post.user}}
+                    </a></h3>
+                </li>
+                <li>
+                    <span class="badge pull-right">Category: {{postsItemCtrl.post.category}}</span>
+                </li>
+                <li class="dropdown">
+              <a href="#" class="dropdown-toggle btn btn-info" data-toggle="dropdown" role="button" aria-expanded=""><span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li 
+                ng-show="postsItemCtrl.addUseMode">
+                    <a href="#" 
+                    ng-click="postsItemCtrl.addUse()">
+                        Use
+                    </a>
+                </li>
+                <li
+                ng-show="!postsItemCtrl.addUseMode">
+                    <a href="#" 
+                    ng-click="postsItemCtrl.removeUse()" 
+                    >
+                        Undo-Use
+                    </a>
+                </li>
+                <li 
+                ng-show="postsItemCtrl.addLikeMode">
+                    <a href="#" 
+                    ng-click="postsItemCtrl.addLike()"  >
+                        Like
+                    </a>
+                </li>
+                <li
+                ng-show="!postsItemCtrl.addLikeMode">
+                    <a href="#" 
+                    ng-click="postsItemCtrl.removeLike()" 
+                    >
+                        Undo-Like
+                    </a>
+                </li>
+                <li>
+                    <a href="#"
+                    ng-click="postsItemCtrl.setRateMode()" >
+                        Rate
+                    </a>
+                </li>
+
+                <li class="divider"></li>
+                <li>
+                    <a href="#" 
+                    ng-click="postsItemCtrl.setMode('edit')">
+                        Edit
+                    </a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="#"
+                    ng-click="postsItemCtrl.deleteItem()">
+                        Delete
+                    </a>
+                </li>
+              </ul>
+              <li ng-show="postsItemCtrl.rateMode">
+                    <select name="rating" ng-model="postsItemCtrl.rating" >
+                        <option value=1 >
+                            1
+                        </option>
+                        <option value=2>
+                            2
+                        </option>
+                        <option value=3>
+                            3
+                        </option>
+                        <option value=4>
+                            4
+                        </option>
+                        <option value=5>
+                            5
+                        </option>
+                    </select>
+                    <button class="btn btn-info btn-xs" ng-click="postsItemCtrl.addRate()">ok</button>
+                </li>
+            </li>
+                <li>
+                    <span class="badge">
+                    Users: {{postsItemCtrl.post.postusers.length}} 
+                    </span>
+                </li>
+                <li>
+                    <span class="badge">
+                    Likes: {{postsItemCtrl.post.likes.length}} 
+                    </span>
+                </li>
+                <li>
+                    <span class="badge">
+                    Ratings: {{postsItemCtrl.post.avg_rating | number:0}}
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="panel-body">
+            <ul>
+                <li>Title: {{postsItemCtrl.post.title}}</li>
+                <li>Text: {{postsItemCtrl.post.text}}</li>
+                <li>Reference: {{postsItemCtrl.post.reference}}</li>
+            </ul>
+        </div>
+        <div class="panel-footer">
+            <ul ng-show="postsItemCtrl.post.comment_set[0]">
+            Comments ({{postsItemCtrl.post.comment_set.length}})
+            
+                <li ng-repeat="data in postsItemCtrl.post.comment_set" ng-show="!data.read">
+                <a href="#" ng-click="postsItemCtrl.changeComment(data.id)">
+                {{data.comment}} by {{data.comment_by}}
+                </a> 
+                </li>
+                <li ng-repeat="data in postsItemCtrl.post.comment_set" ng-show="data.read">
+                {{data.comment}} by {{data.comment_by}}
+                </li>
+            </ul>
+            
+                <form ng-submit="postsItemCtrl.addComment()">
+                    <input ng-model="postsItemCtrl.itemToComment.comment" class="form-control" placeholder="comment here" >
+                    </form>
+
+        </div>
+        <div class="panel-footer">
+            Creadted date: {{postsItemCtrl.post.created_date | date}}
+            Visible: {{postsItemCtrl.post.visible}}
+        </div>
+    </div>
+    <posts-edit
+            ng-show = "postsItemCtrl.editMode"
+            post = "postsItemCtrl.itemToEdit"
+            save="postsItemCtrl.editItem(editedItem)"
+            cancel="postsItemCtrl.setMode('false')"/>
+
+
+<!-- This hyperlink triggers the modal pop up  - change as you need starts-->
+<a href="#" data-toggle="modal" data-target="#myModal">This is it</a>
+<!-- This hyperlink triggers the modal pop up  - change as you need starts-->
+
+
+
+
+<!-- Start Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>
+        </div>
+        <div class="modal-body">
+    
+<!-- Plugging in the Panel code - starts-->
+    <div class="panel panel-primary" ng-show ="!postsItemCtrl.editMode">
+        <div class="panel-heading">
+            <ul class="nav nav-pills">
+                <li>
                     <h3 class="panel-title">Created by: {{postsItemCtrl.post.user}}</h3>
                 </li>
                 <li>
@@ -138,4 +302,30 @@
             post = "postsItemCtrl.itemToEdit"
             save="postsItemCtrl.editItem(editedItem)"
             cancel="postsItemCtrl.setMode('false')"/>
+<!-- Plugging in the Panel code - ends-->
+
+
+
+
+
+
+  
+        </div>      
+          
+          
+          
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div> 
+<!-- end modal test-- >
+
+
+
+
 </div>

@@ -118,7 +118,7 @@ USE_L10N = True
 USE_TZ = True
 
 
-LOGIN_REDIRECT_URL = reverse_lazy('posts:app')
+LOGIN_REDIRECT_URL = reverse_lazy('idea:app')
 LOGIN_URL = reverse_lazy('accounts:login')
 LOGOUT_URL = reverse_lazy('accounts:logout')
 # Static files (CSS, JavaScript, Images)

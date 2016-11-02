@@ -5,7 +5,7 @@ from rest_framework.generics import RetrieveAPIView
 
 from .forms import UserRegistrationForm
 from .serializers import CurrentUserSerializer
-from user_profiles.models import User
+from user_profiles.models import UserProfile
 
 def register(request):
     if request.method == "POST":
@@ -26,8 +26,8 @@ def register(request):
 
 
 class CurrentUserDetails(RetrieveAPIView):
-    model = User
+    model = UserProfile
     serializer_class = CurrentUserSerializer
 
     def get_object(self):
-        return self.request.user
+        return self.request.user.userprofile

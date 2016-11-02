@@ -10,4 +10,10 @@ class CurrentUserSerializer(serializers.ModelSerializer):
             'id',
             'username',
             'email',
-        )
+            'joined',
+            'postusing',
+            'rating_user',
+            'liked_post',
+            'comment_notification',
+            'chat_notification',
+            'receiver')

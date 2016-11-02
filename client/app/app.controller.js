@@ -1,11 +1,15 @@
+import { findIndex } from 'ramda';
 
-
-function AppController(postsService) {
+function AppController(userAPIService,$interval) {
     const ctrl = this;
 
-    postsService.getMe().then((me) => {
-        ctrl.username = me.username;
-    });
-}
+    function getCurrentUser(){
+        userAPIService.currentuser.get().$promise.then((data)=>{
+            ctrl.currentuser = data;
+        });
+    }
+    getCurrentUser();
+    $interval(getCurrentUser,9000);
 
+}
 export default AppController;
