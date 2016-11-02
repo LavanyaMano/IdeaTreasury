@@ -61,7 +61,7 @@ class Posts(models.Model):
 
 
 class Rate(models.Model):
-    rating = models.DecimalField(max_digits=10000, decimal_places=0,default=0)
+    rating = models.DecimalField(max_digits=1000, decimal_places=0,default=0)
     rated_by = models.ForeignKey(UserProfile,blank=True,null=True)
     post_rated = models.ForeignKey(Posts,blank=True,null=True)
 
