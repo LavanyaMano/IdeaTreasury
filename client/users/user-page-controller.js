@@ -49,7 +49,6 @@ function UserPageController(userAPIService,$state){
         console.log("this chat is ", ctrl.thischat)
     };
 
-
     ctrl.saveChat = function saveChat() {
         ctrl.itemToChat.receiver = ctrl.receiverid;
         console.log(ctrl.receiverid);
