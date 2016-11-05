@@ -3,6 +3,10 @@ from .models import UserProfile,Chat
 
 
 class ChatSerializer(serializers.ModelSerializer):
+    sender = serializers.SerializerMethodField()
+    def get_sender(self,chat):
+        return (chat.sender.username(), chat.sender.id)
+        
     class Meta:
         model = Chat
         fields = (
@@ -10,18 +14,18 @@ class ChatSerializer(serializers.ModelSerializer):
             'message',
             'sender',
             'receiver',
-            'read')
-
+            'read',
+            'time',)
+        read_only_fields = ('sender',)
 
 class UserSerializer(serializers.ModelSerializer):
-    receiver = ChatSerializer(many=True)
-    # def get_receiver(self,userprofile):
-    #     return userprofile.receiver.username()
+    receiver = ChatSerializer(many=True, read_only=True)
     class Meta:
         model = UserProfile
         fields = (
             'id',
             'username',
+            'first_name',
             'email',
             'joined',
             'postusing',

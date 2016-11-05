@@ -4,7 +4,8 @@ import PostsPageController from './posts-page-controller';
 const postsPageComponent = {
     template,
     bindings:{
-        filter:'<',
+        me:'<',
+        posts:'<',
     },
     controller:PostsPageController,
     controllerAs:'postsPageCtrl',

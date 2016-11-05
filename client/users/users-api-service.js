@@ -1,19 +1,22 @@
 function userAPIService($resource){
-    const api={
-        currentuser: $resource('/api/me/'),
+    const userResource=$resource('/api/user/:id/',{id:'@id'});
+    const chatResource=$resource('/api/chat/:id/',{id:'@id'});
 
-        user:$resource('/api/user/:id/',
-            {id:'@id'},
-            {
-                update:{
-                    method:'PUT',
-                },
-            },),
-
-        chat:$resource('/api/chat/:id/',
-            {id:'@id'},),
-    }
-    return api;
+    return{
+        getUser(){
+            return userResource.get({}).$promise.then((data) => {
+                return data.results;
+            });
+        },
+        getChat(){
+            return chatResource.get({}).$promise.then((data)=>{
+                return data.results;
+            });
+        },
+        saveChat(chatItems){
+            return chatResource.save(chatItems).$promise;
+        },
+    };
 }
 
 export default userAPIService;

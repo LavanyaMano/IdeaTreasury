@@ -10,12 +10,15 @@ class UserProfile(models.Model):
     joined = models.DateTimeField(auto_now_add=True)
     education = models.CharField(max_length=10,blank=True)
     occupation = models.CharField(max_length=10,blank=True)
+    location = models.CharField(max_length=10,blank=True)
 
 
     def username(self):
         username=self.user.username 
         return username
-
+    def first_name(self):
+        first_name=self.user.first_name 
+        return first_name
     def email(self):
         email = self.user.email
         return email
@@ -65,6 +68,7 @@ class UserProfile(models.Model):
                     unread.append(raw_list[a]) 
         return len(unread)
 
+
 @receiver(post_save, sender=User) 
 def create_profile(sender, instance, created, **kwargs): 
     """Create a matching profile whenever a user object is created.""" 
@@ -76,6 +80,13 @@ class Chat(models.Model):
     sender = models.ForeignKey(UserProfile,blank=True,null=True,related_name="sender")
     receiver = models.ForeignKey(UserProfile,blank=True,null=True,related_name="receiver")
     read = models.BooleanField(default=False)
+    time = models.DateTimeField(auto_now_add=True, null=True)
+
 
     def __str__(self):
         return self.message
+
+
+
+
+

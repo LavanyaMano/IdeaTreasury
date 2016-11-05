@@ -1,11 +1,12 @@
 
-<form ng-submit="postsEditCtrl.saveItem()">
+<form ng-submit="postsEditCtrl.saveItem(editedItem)">
     <div class="panel panel-primary form-group ">
         <div class="panel-heading">
             <ul class="nav nav-pills">
                 <li>
                     <h3 class="panel-title">
-                        <input ng-model="postsEditCtrl.editedItem.user" class="form-control" placeholder="user" ></input>
+                    
+            <input ng-model="postsEditCtrl.editedItem.title" class="form-control" placeholder="title" ></input>
                     </h3>
                 </li>
                 <li>
@@ -32,7 +33,6 @@
             </ul>
         </div>
         <div class="panel-body">
-            <input ng-model="postsEditCtrl.editedItem.title" class="form-control" placeholder="title" ></input>
             <input ng-model="postsEditCtrl.editedItem.text" class="form-control" placeholder="Text" ></input>
             <input ng-model="postsEditCtrl.editedItem.reference" class="form-control" placeholder="Reference"></input>
         </div>
@@ -46,17 +46,12 @@
                 </option>
             </select>
         </div>
-        <button 
-        class="btn btn-default" 
-        type="submit"
-        ng-disabled="!postsEditCtrl.editedItem.text"
-        >
-            Save Post
+        <button class="btn btn-primary" type="submit">
+            Add
         </button>
         <button
         class="btn btn-danger"
         type = "button"
-        ng-show="postsEditCtrl.cancel"
         ng-click="postsEditCtrl.cancel()"
         >
             Cancel

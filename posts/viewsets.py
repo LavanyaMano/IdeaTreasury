@@ -20,4 +20,6 @@ class RateViewSet(viewsets.ModelViewSet):
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+    def perform_create(self,serializer):
+        serializer.save(comment_by = self.request.user.userprofile)
 

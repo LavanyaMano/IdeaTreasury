@@ -1,17 +1,21 @@
 import { merge } from 'ramda';
 
-function PostsEditController(){
+function PostsEditController(postsAPIService,$state){
     const ctrl = this;
     ctrl.editedItem = {};
     ctrl.editedItem.category = "ART";
     ctrl.editedItem.visible = true;
-    ctrl.$onChanges = function $onChanges(){
-        ctrl.editedItem = merge({},ctrl.post);
-    }
-    ctrl.saveItem = function saveItem(){
-        ctrl.save({editedItem: ctrl.editedItem})
-        ctrl.editedItem={};
+
+    ctrl.saveItem =function saveItem(item){
+        postsAPIService.addPost(item).then((data)=>{
+            console.log(data)
+            $state.go('posts')
+        })
+    };
+    ctrl.cancel = function cancel(){
+        $state.go('posts')
     };
 }
+
 
 export default PostsEditController;

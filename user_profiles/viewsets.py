@@ -16,3 +16,5 @@ class UserViewSet(viewsets.ModelViewSet):
 class ChatViewSet(viewsets.ModelViewSet):
     queryset = Chat.objects.all()
     serializer_class = ChatSerializer
+    def perform_create(self,serializer):
+        serializer.save(sender = self.request.user.userprofile)

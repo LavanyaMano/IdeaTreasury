@@ -3,11 +3,6 @@ import PostsEditController from './posts-edit.controller';
 
 const postsEditComponent ={
     template,
-    bindings:{
-        save:'&',
-        post:'<',
-        cancel:'&?',
-    },
     controller:PostsEditController,
     controllerAs:'postsEditCtrl',
 };

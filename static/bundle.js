@@ -66,41 +66,76 @@
 	
 	var _angularUiRouter2 = _interopRequireDefault(_angularUiRouter);
 	
-	var _posts = __webpack_require__(5);
+	var _angularCookies = __webpack_require__(5);
+	
+	var _angularCookies2 = _interopRequireDefault(_angularCookies);
+	
+	var _posts = __webpack_require__(7);
 	
 	var _posts2 = _interopRequireDefault(_posts);
 	
-	var _users = __webpack_require__(19);
+	var _users = __webpack_require__(18);
 	
 	var _users2 = _interopRequireDefault(_users);
 	
-	var _app = __webpack_require__(27);
+	var _app = __webpack_require__(23);
 	
 	var _app2 = _interopRequireDefault(_app);
 	
-	var _usersApiService = __webpack_require__(26);
+	var _usersApiService = __webpack_require__(22);
 	
 	var _usersApiService2 = _interopRequireDefault(_usersApiService);
 	
+	var _postsApiService = __webpack_require__(17);
+	
+	var _postsApiService2 = _interopRequireDefault(_postsApiService);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var AppModule = _angular2.default.module('app', [_angularUiRouter2.default, _posts2.default.name, _users2.default.name]).config(function ($resourceProvider, $stateProvider, $urlRouterProvider) {
+	var AppModule = _angular2.default.module('app', [_angularUiRouter2.default, _angularCookies2.default, _posts2.default.name, _users2.default.name]).config(function ($resourceProvider, $stateProvider, $urlRouterProvider) {
 	
 	    $resourceProvider.defaults.stripTrailingSlashes = false;
 	
 	    $urlRouterProvider.otherwise('/');
 	
-	    $stateProvider.state('otherwise', {
+	    $stateProvider.state('home', {
 	        url: '/'
 	
 	    }).state('user', {
 	        url: '/user',
+	        resolve: {
+	            me: function me(postsAPIService) {
+	                return postsAPIService.getMe();
+	            },
+	            chat: function chat(userAPIService) {
+	                return userAPIService.getChat();
+	            },
+	            users: function users(userAPIService) {
+	                return userAPIService.getUser();
+	            }
+	        },
 	        component: 'userPage'
 	    }).state('posts', {
 	        url: '/posts',
+	        resolve: {
+	            me: function me(postsAPIService) {
+	                return postsAPIService.getMe();
+	            },
+	            posts: function posts(postsAPIService) {
+	                return postsAPIService.getAllPosts();
+	            }
+	        },
 	        component: 'postsPage'
+	    }).state('addpost', {
+	        url: '/addpost',
+	        component: 'postsEdit'
 	    });
-	}).factory('userAPIService', _usersApiService2.default).component('app', _app2.default);
+	}).factory('userAPIService', _usersApiService2.default).component('app', _app2.default).run(function ($http, $cookies) {
+	    // Add a header for CSRF token, so that POST does not fail to our API
+	
+	    // eslint-disable-next-line no-param-reassign
+	    $http.defaults.headers.common['X-CSRFToken'] = $cookies.get('csrftoken');
+	});
 	
 	exports.default = AppModule;
 
@@ -40238,6 +40273,342 @@
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
+	__webpack_require__(6);
+	module.exports = 'ngCookies';
+
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	/**
+	 * @license AngularJS v1.5.8
+	 * (c) 2010-2016 Google, Inc. http://angularjs.org
+	 * License: MIT
+	 */
+	(function(window, angular) {'use strict';
+	
+	/**
+	 * @ngdoc module
+	 * @name ngCookies
+	 * @description
+	 *
+	 * # ngCookies
+	 *
+	 * The `ngCookies` module provides a convenient wrapper for reading and writing browser cookies.
+	 *
+	 *
+	 * <div doc-module-components="ngCookies"></div>
+	 *
+	 * See {@link ngCookies.$cookies `$cookies`} for usage.
+	 */
+	
+	
+	angular.module('ngCookies', ['ng']).
+	  /**
+	   * @ngdoc provider
+	   * @name $cookiesProvider
+	   * @description
+	   * Use `$cookiesProvider` to change the default behavior of the {@link ngCookies.$cookies $cookies} service.
+	   * */
+	   provider('$cookies', [function $CookiesProvider() {
+	    /**
+	     * @ngdoc property
+	     * @name $cookiesProvider#defaults
+	     * @description
+	     *
+	     * Object containing default options to pass when setting cookies.
+	     *
+	     * The object may have following properties:
+	     *
+	     * - **path** - `{string}` - The cookie will be available only for this path and its
+	     *   sub-paths. By default, this is the URL that appears in your `<base>` tag.
+	     * - **domain** - `{string}` - The cookie will be available only for this domain and
+	     *   its sub-domains. For security reasons the user agent will not accept the cookie
+	     *   if the current domain is not a sub-domain of this domain or equal to it.
+	     * - **expires** - `{string|Date}` - String of the form "Wdy, DD Mon YYYY HH:MM:SS GMT"
+	     *   or a Date object indicating the exact date/time this cookie will expire.
+	     * - **secure** - `{boolean}` - If `true`, then the cookie will only be available through a
+	     *   secured connection.
+	     *
+	     * Note: By default, the address that appears in your `<base>` tag will be used as the path.
+	     * This is important so that cookies will be visible for all routes when html5mode is enabled.
+	     *
+	     **/
+	    var defaults = this.defaults = {};
+	
+	    function calcOptions(options) {
+	      return options ? angular.extend({}, defaults, options) : defaults;
+	    }
+	
+	    /**
+	     * @ngdoc service
+	     * @name $cookies
+	     *
+	     * @description
+	     * Provides read/write access to browser's cookies.
+	     *
+	     * <div class="alert alert-info">
+	     * Up until Angular 1.3, `$cookies` exposed properties that represented the
+	     * current browser cookie values. In version 1.4, this behavior has changed, and
+	     * `$cookies` now provides a standard api of getters, setters etc.
+	     * </div>
+	     *
+	     * Requires the {@link ngCookies `ngCookies`} module to be installed.
+	     *
+	     * @example
+	     *
+	     * ```js
+	     * angular.module('cookiesExample', ['ngCookies'])
+	     *   .controller('ExampleController', ['$cookies', function($cookies) {
+	     *     // Retrieving a cookie
+	     *     var favoriteCookie = $cookies.get('myFavorite');
+	     *     // Setting a cookie
+	     *     $cookies.put('myFavorite', 'oatmeal');
+	     *   }]);
+	     * ```
+	     */
+	    this.$get = ['$$cookieReader', '$$cookieWriter', function($$cookieReader, $$cookieWriter) {
+	      return {
+	        /**
+	         * @ngdoc method
+	         * @name $cookies#get
+	         *
+	         * @description
+	         * Returns the value of given cookie key
+	         *
+	         * @param {string} key Id to use for lookup.
+	         * @returns {string} Raw cookie value.
+	         */
+	        get: function(key) {
+	          return $$cookieReader()[key];
+	        },
+	
+	        /**
+	         * @ngdoc method
+	         * @name $cookies#getObject
+	         *
+	         * @description
+	         * Returns the deserialized value of given cookie key
+	         *
+	         * @param {string} key Id to use for lookup.
+	         * @returns {Object} Deserialized cookie value.
+	         */
+	        getObject: function(key) {
+	          var value = this.get(key);
+	          return value ? angular.fromJson(value) : value;
+	        },
+	
+	        /**
+	         * @ngdoc method
+	         * @name $cookies#getAll
+	         *
+	         * @description
+	         * Returns a key value object with all the cookies
+	         *
+	         * @returns {Object} All cookies
+	         */
+	        getAll: function() {
+	          return $$cookieReader();
+	        },
+	
+	        /**
+	         * @ngdoc method
+	         * @name $cookies#put
+	         *
+	         * @description
+	         * Sets a value for given cookie key
+	         *
+	         * @param {string} key Id for the `value`.
+	         * @param {string} value Raw value to be stored.
+	         * @param {Object=} options Options object.
+	         *    See {@link ngCookies.$cookiesProvider#defaults $cookiesProvider.defaults}
+	         */
+	        put: function(key, value, options) {
+	          $$cookieWriter(key, value, calcOptions(options));
+	        },
+	
+	        /**
+	         * @ngdoc method
+	         * @name $cookies#putObject
+	         *
+	         * @description
+	         * Serializes and sets a value for given cookie key
+	         *
+	         * @param {string} key Id for the `value`.
+	         * @param {Object} value Value to be stored.
+	         * @param {Object=} options Options object.
+	         *    See {@link ngCookies.$cookiesProvider#defaults $cookiesProvider.defaults}
+	         */
+	        putObject: function(key, value, options) {
+	          this.put(key, angular.toJson(value), options);
+	        },
+	
+	        /**
+	         * @ngdoc method
+	         * @name $cookies#remove
+	         *
+	         * @description
+	         * Remove given cookie
+	         *
+	         * @param {string} key Id of the key-value pair to delete.
+	         * @param {Object=} options Options object.
+	         *    See {@link ngCookies.$cookiesProvider#defaults $cookiesProvider.defaults}
+	         */
+	        remove: function(key, options) {
+	          $$cookieWriter(key, undefined, calcOptions(options));
+	        }
+	      };
+	    }];
+	  }]);
+	
+	angular.module('ngCookies').
+	/**
+	 * @ngdoc service
+	 * @name $cookieStore
+	 * @deprecated
+	 * @requires $cookies
+	 *
+	 * @description
+	 * Provides a key-value (string-object) storage, that is backed by session cookies.
+	 * Objects put or retrieved from this storage are automatically serialized or
+	 * deserialized by angular's toJson/fromJson.
+	 *
+	 * Requires the {@link ngCookies `ngCookies`} module to be installed.
+	 *
+	 * <div class="alert alert-danger">
+	 * **Note:** The $cookieStore service is **deprecated**.
+	 * Please use the {@link ngCookies.$cookies `$cookies`} service instead.
+	 * </div>
+	 *
+	 * @example
+	 *
+	 * ```js
+	 * angular.module('cookieStoreExample', ['ngCookies'])
+	 *   .controller('ExampleController', ['$cookieStore', function($cookieStore) {
+	 *     // Put cookie
+	 *     $cookieStore.put('myFavorite','oatmeal');
+	 *     // Get cookie
+	 *     var favoriteCookie = $cookieStore.get('myFavorite');
+	 *     // Removing a cookie
+	 *     $cookieStore.remove('myFavorite');
+	 *   }]);
+	 * ```
+	 */
+	 factory('$cookieStore', ['$cookies', function($cookies) {
+	
+	    return {
+	      /**
+	       * @ngdoc method
+	       * @name $cookieStore#get
+	       *
+	       * @description
+	       * Returns the value of given cookie key
+	       *
+	       * @param {string} key Id to use for lookup.
+	       * @returns {Object} Deserialized cookie value, undefined if the cookie does not exist.
+	       */
+	      get: function(key) {
+	        return $cookies.getObject(key);
+	      },
+	
+	      /**
+	       * @ngdoc method
+	       * @name $cookieStore#put
+	       *
+	       * @description
+	       * Sets a value for given cookie key
+	       *
+	       * @param {string} key Id for the `value`.
+	       * @param {Object} value Value to be stored.
+	       */
+	      put: function(key, value) {
+	        $cookies.putObject(key, value);
+	      },
+	
+	      /**
+	       * @ngdoc method
+	       * @name $cookieStore#remove
+	       *
+	       * @description
+	       * Remove given cookie
+	       *
+	       * @param {string} key Id of the key-value pair to delete.
+	       */
+	      remove: function(key) {
+	        $cookies.remove(key);
+	      }
+	    };
+	
+	  }]);
+	
+	/**
+	 * @name $$cookieWriter
+	 * @requires $document
+	 *
+	 * @description
+	 * This is a private service for writing cookies
+	 *
+	 * @param {string} name Cookie name
+	 * @param {string=} value Cookie value (if undefined, cookie will be deleted)
+	 * @param {Object=} options Object with options that need to be stored for the cookie.
+	 */
+	function $$CookieWriter($document, $log, $browser) {
+	  var cookiePath = $browser.baseHref();
+	  var rawDocument = $document[0];
+	
+	  function buildCookieString(name, value, options) {
+	    var path, expires;
+	    options = options || {};
+	    expires = options.expires;
+	    path = angular.isDefined(options.path) ? options.path : cookiePath;
+	    if (angular.isUndefined(value)) {
+	      expires = 'Thu, 01 Jan 1970 00:00:00 GMT';
+	      value = '';
+	    }
+	    if (angular.isString(expires)) {
+	      expires = new Date(expires);
+	    }
+	
+	    var str = encodeURIComponent(name) + '=' + encodeURIComponent(value);
+	    str += path ? ';path=' + path : '';
+	    str += options.domain ? ';domain=' + options.domain : '';
+	    str += expires ? ';expires=' + expires.toUTCString() : '';
+	    str += options.secure ? ';secure' : '';
+	
+	    // per http://www.ietf.org/rfc/rfc2109.txt browser must allow at minimum:
+	    // - 300 cookies
+	    // - 20 cookies per unique domain
+	    // - 4096 bytes per cookie
+	    var cookieLength = str.length + 1;
+	    if (cookieLength > 4096) {
+	      $log.warn("Cookie '" + name +
+	        "' possibly not set or overflowed because it was too large (" +
+	        cookieLength + " > 4096 bytes)!");
+	    }
+	
+	    return str;
+	  }
+	
+	  return function(name, value, options) {
+	    rawDocument.cookie = buildCookieString(name, value, options);
+	  };
+	}
+	
+	$$CookieWriter.$inject = ['$document', '$log', '$browser'];
+	
+	angular.module('ngCookies').provider('$$cookieWriter', function $$CookieWriterProvider() {
+	  this.$get = $$CookieWriter;
+	});
+	
+	
+	})(window, window.angular);
+
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
@@ -40248,21 +40619,17 @@
 	
 	var _angular2 = _interopRequireDefault(_angular);
 	
-	__webpack_require__(6);
+	__webpack_require__(8);
 	
-	var _postsPageComponent = __webpack_require__(8);
+	var _postsPageComponent = __webpack_require__(10);
 	
 	var _postsPageComponent2 = _interopRequireDefault(_postsPageComponent);
 	
-	var _postsItem = __webpack_require__(12);
-	
-	var _postsItem2 = _interopRequireDefault(_postsItem);
-	
-	var _postsEdit = __webpack_require__(15);
+	var _postsEdit = __webpack_require__(14);
 	
 	var _postsEdit2 = _interopRequireDefault(_postsEdit);
 	
-	var _postsApiService = __webpack_require__(18);
+	var _postsApiService = __webpack_require__(17);
 	
 	var _postsApiService2 = _interopRequireDefault(_postsApiService);
 	
@@ -40270,20 +40637,20 @@
 	
 	var PostsModule = _angular2.default.module('posts', ['ngResource']).config(function ($resourceProvider) {
 	    $resourceProvider.defaults.stripTrailingSlashes = false;
-	}).factory('postsAPIService', _postsApiService2.default).component('postsPage', _postsPageComponent2.default).component('postsItem', _postsItem2.default).component('postsEdit', _postsEdit2.default);
+	}).factory('postsAPIService', _postsApiService2.default).component('postsPage', _postsPageComponent2.default).component('postsEdit', _postsEdit2.default);
 	
 	exports.default = PostsModule;
 
 /***/ },
-/* 6 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(7);
+	__webpack_require__(9);
 	module.exports = 'ngResource';
 
 
 /***/ },
-/* 7 */
+/* 9 */
 /***/ function(module, exports) {
 
 	/**
@@ -41152,43 +41519,6 @@
 
 
 /***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _postsPage = __webpack_require__(9);
-	
-	var _postsPage2 = _interopRequireDefault(_postsPage);
-	
-	var _postsPageController = __webpack_require__(10);
-	
-	var _postsPageController2 = _interopRequireDefault(_postsPageController);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var postsPageComponent = {
-	    template: _postsPage2.default,
-	    bindings: {
-	        filter: '<'
-	    },
-	    controller: _postsPageController2.default,
-	    controllerAs: 'postsPageCtrl'
-	};
-	
-	exports.default = postsPageComponent;
-
-/***/ },
-/* 9 */
-/***/ function(module, exports) {
-
-	module.exports = "<button class=\"btn btn-default \"\n    ng-click=\"postsPageCtrl.setMode('add')\">\n    <i class=\"fa fa-plus\"></i>\n    Add Post\n</button>\n<posts-edit\n    ng-show = \"postsPageCtrl.addMode \"\n    post = \"postsPageCtrl.editedItem\"\n    save=\"postsPageCtrl.saveItem(editedItem)\"\n    cancel=\"postsPageCtrl.setMode('false')\"/>\n\n<div class=\"row\">\n\n<posts-item\n    ng-repeat= \"post in postsPageCtrl.posts | filter: postsPageCtrl.filter track by post.id\" \n    post = \"post\"\n    delete =\"postsPageCtrl.deleteItem(itemToDelete)\"\n    update = \"postsPageCtrl.updateItem(itemToUpdate)\"\n    save = \"postsPageCtrl.rateItem(itemToRate)\"\n    postcomment = \"postsPageCtrl.commentItem(itemToComment)\"\n    changecomment = \"postsPageCtrl.commentChange(itemToComment)\"\n    />\n<hr>\n{{postsPageCtrl.posts}}\n</div>"
-
-/***/ },
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -41198,126 +41528,120 @@
 	    value: true
 	});
 	
-	var _ramda = __webpack_require__(11);
+	var _postsPage = __webpack_require__(11);
 	
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	var _postsPage2 = _interopRequireDefault(_postsPage);
 	
-	function PostsPageController(postsAPIService, $interval) {
+	var _postsPageController = __webpack_require__(12);
+	
+	var _postsPageController2 = _interopRequireDefault(_postsPageController);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var postsPageComponent = {
+	    template: _postsPage2.default,
+	    bindings: {
+	        me: '<',
+	        posts: '<'
+	    },
+	    controller: _postsPageController2.default,
+	    controllerAs: 'postsPageCtrl'
+	};
+	
+	exports.default = postsPageComponent;
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	module.exports = "<a ui-sref=\"addpost\">\n    <button class=\"btn btn-default\">\n    <i class=\"fa fa-plus\"></i>\n    Add Post\n    </button>\n</a>\n\n\n<div class=\"row\">\n<div class=\"col-xs-3\"  ng-repeat= \"post in postsPageCtrl.posts track by post.id\" ng-show=\"post.visible\" >\n    <div class=\"panel panel-primary\" ng-show =\"!postsPageCtrl.editMode\">\n        <div class=\"panel-heading\">\n            <ul class=\"nav nav-pills\">\n                <li>\n                    <h3 class=\"panel-title\">\n                    <!-- Modal link here to pop up modal box -->\n                     <a href=\"\" data-toggle=\"modal\" data-target=\"#myModal\">\n                    Created by: {{post.username}}\n                    </a></h3>\n                </li>\n                <li>\n                    <button class=\"btn btn-default btn-xs\" ng-click=\"postsPageCtrl.setMode('edit')\">\n                        Edit\n                    </button>\n                </li>\n                <li>\n                    <span class=\"badge pull-right\">Category: {{post.category}}</span>\n                </li>\n               \n                <li>\n                    <span class=\"badge\">\n                    Users: {{post.postusers.length}} \n                    </span>\n                </li>\n                <li>\n                    <span class=\"badge\">\n                    Likes: {{post.likes.length}} \n                    </span>\n                </li>\n                <li>\n                    <span class=\"badge\">\n                    Ratings: {{post.avg_rating | number:0}}\n                    </span>\n                </li>\n            </ul>\n        </div>\n\n        <div class=\"panel-body\" id=\"post-panel-body\">\n            <ul>\n                <li>Title: {{post.title}}</li>\n                <li>Text: {{post.text}}</li>\n                <li>Reference: {{post.reference}}</li>\n            </ul>\n        </div>\n        <div class=\"panel-footer\">\n            Creadted date: {{post.created_date | date}}\n        </div>\n    </div>\n    \n    <!-- edit mode ############### -->\n    <div ng-show=\"postsPageCtrl.editMode\">\n<form ng-submit=\"postsPageCtrl.saveItem(editedItem)\" >\n    <div class=\"panel panel-primary form-group \">\n        <div class=\"panel-heading\">\n            <ul class=\"nav nav-pills\">\n                <li>\n                    <h3 class=\"panel-title\">\n                    \n            <input ng-model=\"postsPageCtrl.editedItem.title\" class=\"form-control\" placeholder=\"{{post.title}}\" >\n            </input>\n                    </h3>\n                </li>\n                <li>\n                    <span class=\"badge pull-right\">\n                        <select name=\"category\" ng-model=\"postsPageCtrl.editedItem.category\" class=\"form-control\">\n                            <option value=\"Art\">\n                                Art\n                            </option>\n                            <option value=\"Science\">\n                                Science\n                            </option>\n                            <option value=\"Finance\">\n                                Finance\n                            </option>\n                            <option value=\"Technology\">\n                                Technology\n                            </option>\n                            <option value=\"Business\">\n                                Business\n                            </option>\n                        </select>\n                    </span>\n                </li>\n            </ul>\n        </div>\n        <div class=\"panel-body\">\n            <input ng-model=\"postsPageCtrl.editedItem.text\" class=\"form-control\" placeholder=\"{{post.text}}\" >\n            </input>\n            <input ng-model=\"postsPageCtrl.editedItem.reference\" class=\"form-control\" placeholder=\"{{post.reference}}\"></input>\n        </div>\n        <div class=\"panel-footer\">\n            <select name=\"visible\" ng-model=\"postsPageCtrl.editedItem.visible\" class=\"form-control\">\n                <option value=\"true\">\n                    Public\n                </option>\n                <option value=\"false\">\n                    Private\n                </option>\n            </select>\n        </div>\n        <button class=\"btn btn-primary\" ng-click=\"postsPageCtrl.saveItem(editedItem)\">\n            update\n        </button>\n        <button\n        class=\"btn btn-danger\"\n        type = \"button\"\n        ng-click=\"postsPageCtrl.setMode('cancel')\"\n        >\n            Cancel\n        </button>\n    </div>\n</form>\n</div>\n<!-- ################# -->\n\n<!-- Start Modal -->\n  <div class=\"modal fade\" id=\"myModal\" role=\"dialog\">\n    <div class=\"modal-dialog\">\n\n      <!-- Modal content-->\n      <div class=\"modal-content\">\n        <div class=\"modal-header\">\n          <button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\n          <h4 class=\"modal-title\">Title: {{post.title}}</h4>\n        </div>\n        <div class=\"modal-body\">\n    \n<!-- Plugging in the Panel code - starts-->\n   <div class=\"panel panel-primary\" ng-show =\"!postsPageCtrl.editMode\">\n        <div class=\"panel-heading\">\n            <ul class=\"nav nav-pills\">\n                <li>\n                    <h3 class=\"panel-title\">\n\n                    Created by: {{post.username}}\n                    </h3>\n                </li>\n                <li>\n                    <span class=\"badge pull-right\">Category: {{post.category}}</span>\n                </li>\n                <li class=\"dropdown\">\n              <a href=\"\" class=\"dropdown-toggle btn btn-info\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"\"><span class=\"caret\"></span></a>\n              <ul class=\"dropdown-menu\" role=\"menu\">\n                <li \n                ng-show=\"postsPageCtrl.addUseMode\">\n                    <a href=\"#\" \n                    ng-click=\"postsPageCtrl.addUse(post.id)\">\n                        Use\n                    </a>\n                </li>\n                <li\n                ng-show=\"!postsPageCtrl.addUseMode\">\n                    <a href=\"#\" \n                    ng-click=\"postsPageCtrl.removeUse(post.id)\" \n                    >\n                        Undo-Use\n                    </a>\n                </li>\n                <li \n                ng-show=\"postsPageCtrl.addLikeMode\">\n                    <a href=\"#\" \n                    ng-click=\"postsPageCtrl.addLike(post.id)\"  >\n                        Like\n                    </a>\n                </li>\n                <li\n                ng-show=\"!postsPageCtrl.addLikeMode\">\n                    <a href=\"#\" \n                    ng-click=\"postsPageCtrl.removeLike(post.id)\" \n                    >\n                        Undo-Like\n                    </a>\n                </li>\n                <li ng-show=\" !post.username == postsPageCtrl.me.username\">\n                    <a href=\"#\"\n                    ng-click=\"postsPageCtrl.setRateMode(post.id)\" >\n                        Rate\n                    </a>\n                </li>\n\n                <li class=\"divider\" ng-show=\"post.username == postsPageCtrl.me.username\"></li>\n                <li ng-show=\"post.username == postsPageCtrl.me.username\">\n                    <a href=\"#\" \n                    ng-click=\"postsPageCtrl.setMode('edit')\" >\n                        Edit\n                    </a>\n                </li>\n                <li class=\"divider\" ng-show=\"post.username == postsPageCtrl.me.username\"></li>\n                <li ng-show=\"post.username == postsPageCtrl.me.username\">\n                    <a href=\"#\"\n                    ng-click=\"postsPageCtrl.deleteItem(post.id)\">\n                        Delete\n                    </a>\n                </li>\n              </ul>\n              <li ng-show=\"postsPageCtrl.rateMode\" >\n                    <select name=\"rating\" ng-model=\"postsPageCtrl.rating\" >\n                        <option value=1 >\n                            1\n                        </option>\n                        <option value=2>\n                            2\n                        </option>\n                        <option value=3>\n                            3\n                        </option>\n                        <option value=4>\n                            4\n                        </option>\n                        <option value=5>\n                            5\n                        </option>\n                    </select>\n                    <button class=\"btn btn-info btn-xs\" ng-click=\"postsPageCtrl.addRate(post.id)\">ok</button>\n                </li>\n            </li>\n                <li>\n                    <span class=\"badge\">\n                    Users: {{post.postusers.length}} \n                    </span>\n                </li>\n                <li>\n                    <span class=\"badge\">\n                    Likes: {{post.likes.length}} \n                    </span>\n                </li>\n                <li>\n                    <span class=\"badge\">\n                    Ratings: {{post.avg_rating | number:0}}\n                    </span>\n                </li>\n            </ul>\n        </div>\n\n        <div class=\"panel-body\">\n            <ul>\n                <li>Text: {{post.text}}</li>\n                <li>Reference: {{post.reference}}</li>\n            </ul>\n        </div>\n        <div class=\"panel-footer\">\n    \n            <ul ng-show=\"post.comment_set[0]\">\n            Comments ({{post.comment_set.length}})\n            \n                <li ng-repeat=\"data in post.comment_set\" ng-show=\"!data.read\">\n                <a ng-click=\"postsPageCtrl.changeComment(data.id)\">\n                {{data.comment}} by {{data.comment_by}}\n                </a> \n                </li>\n                <li ng-repeat=\"data in post.comment_set\" ng-show=\"data.read\">\n                {{data.comment}} by {{data.comment_by}}\n                </li>\n            </ul>\n            \n                <form ng-submit=\"postsPageCtrl.comment(post.id)\">\n                    <input ng-model=\"postsPageCtrl.itemToComment.comment\" class=\"form-control\" placeholder=\"comment here\" >\n                    </form>\n\n        </div>\n        <div class=\"panel-footer\">\n            Creadted date: {{post.created_date | date}}\n        </div>\n    </div>\n<!-- Plugging in the Panel code - ends-->\n\n        </div>      \n\n        </div>\n        <div class=\"modal-footer\">\n          <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n        </div>\n      </div>\n\n    </div>\n  </div> \n<!-- end modal test-- >\n\n</div>\n\n</div>\n\n<hr>\n{{postsPageCtrl.posts}}\n</div>"
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _ramda = __webpack_require__(13);
+	
+	function PostsPageController(postsAPIService, $state, $window) {
+	
 	    var ctrl = this;
-	    ctrl.editedItem = {};
+	    ctrl.itemToComment = {};
+	    ctrl.itemToRate = {};
+	    ctrl.itemToAdd = {};
+	    ctrl.itemToEdit = {};
 	    ctrl.addMode = false;
-	
-	    function getPosts() {
-	        postsAPIService.posts.get().$promise.then(function (data) {
-	            ctrl.posts = data.results;
-	            ctrl.itemsCount = ctrl.posts.length;
-	        });
-	    }
-	
-	    getPosts();
-	
-	    $interval(getPosts, 9000);
+	    ctrl.editMode = false;
 	
 	    ctrl.setMode = function setMode(mode) {
 	        if (mode == "add") {
 	            ctrl.addMode = true;
+	            ctrl.editMode = false;
+	        } else if (mode == "edit") {
+	            ctrl.addMode = false;
+	            ctrl.editMode = true;
 	        } else {
 	            ctrl.addMode = false;
+	            ctrl.editMode = false;
 	            console.log("addMode working");
 	        }
 	    };
-	
-	    ctrl.saveItem = function saveItem(editedItem) {
-	        postsAPIService.posts.save(editedItem).$promise.then(function (savedItem) {
-	            ctrl.posts = [savedItem].concat(_toConsumableArray(ctrl.posts));
-	            ctrl.editedItem = {};
-	            ctrl.addMode = false;
-	            //flashesService.displayMessage('Item added!','success');
-	            console.log('Item added! : This is from posts-page-controller');
+	    ctrl.addItem = function addItem(item) {
+	        postsAPIService.addPost(item).then(function () {
+	            return $state.reload();
 	        });
 	    };
-	    ctrl.updateItem = function updateItem(itemToUpdate) {
-	        postsAPIService.posts.update(itemToUpdate).$promise.then(function () {
-	            //flashesService.displayMessage('Item is update!','warning');
-	            console.log('Item updated! : This is from posts-page-controller');
+	    ctrl.saveItem = function saveItem(item) {
+	        postsAPIService.addPost(item).then(function () {
+	            return $state.reload();
 	        });
 	    };
-	    ctrl.deleteItem = function deleteItem(itemToDelete) {
-	        var index = (0, _ramda.findIndex)(function (item) {
-	            return itemToDelete.id === item.id;
-	        })(ctrl.posts);
-	        if (index !== -1) {
-	            ctrl.posts.splice(index, 1);
-	        }
-	        postsAPIService.posts.delete(itemToDelete).$promise.then(function () {
-	            //flashesService.displayMessage('Item removed!',"danger");
-	            console.log('Item removed! : This is from posts-page-controller');
-	        });
-	    };
-	    ctrl.addUse = function addUse(postToUse) {
-	        var index = (0, _ramda.findIndex)(function (item) {
-	            return postToUse.id === item.id;
-	        })(ctrl.posts);
-	        if (index !== -1) {
-	            ctrl.posts.add_use(index, 1);
-	        }
-	        postsAPIService.posts.update(postToUse).$promise.then(function () {
-	            //flashesService.displayMessage('Item removed!',"danger");
-	            console.log('post used! : This is from posts-page-controller');
+	    ctrl.deleteItem = function deleteItem(item) {
+	        postsAPIService.removePost(item).then(function () {
+	            return $state.reload();
 	        });
 	    };
 	
-	    //Rate API, getting rate API, updating rate API.
-	
-	    function getRate() {
-	        postsAPIService.rate.get().$promise.then(function (data) {
-	            ctrl.rate = data.results;
-	        });
-	    }
-	    getRate();
-	    $interval(getRate, 9000);
-	    ctrl.rateItem = function rateItem(itemToRate) {
-	        postsAPIService.rate.save(itemToRate).$promise.then(function (savedItem) {
-	            ctrl.rate = [savedItem].concat(_toConsumableArray(ctrl.rate));
-	            ctrl.itemToRate = {};
-	            //flashesService.displayMessage('Item added!','success');
-	            console.log('Ratings added! : This is from posts-page-controller');
+	    ctrl.rateAdd = function rateAdd(item) {
+	        postsAPIService.addRate(item).then(function () {
+	            return $state.reload();
 	        });
 	    };
-	
-	    //commenting on post, posting comment, commented by, post-commented on to comment API.
-	    function getComment() {
-	        postsAPIService.comment.get().$promise.then(function (data) {
-	            ctrl.comment = data.results;
-	        });
-	    }
-	    getComment();
-	    $interval(getComment, 9000);
-	
-	    ctrl.commentItem = function commentItem(itemToComment) {
-	        postsAPIService.comment.postcomment(itemToComment).$promise.then(function (savedItem) {
-	            ctrl.comment = [savedItem].concat(_toConsumableArray(ctrl.comment));
-	            ctrl.itemToComment = {};
-	            //flashesService.displayMessage('Item added!','success');
-	            console.log('comments added! : This is from posts-page-controller');
+	    ctrl.rateDelete = function rateDelete(item) {
+	        postsAPIService.removeRate(item).then(function () {
+	            return $state.reload();
 	        });
 	    };
+	    ctrl.commentAdd = function commentAdd(item) {
+	        postsAPIService.addComment(item);
+	    };
 	
-	    //changing comment.read == true
-	    ctrl.commentChange = function commentChange(itemToComment) {
-	        postsAPIService.comment.changecomment(itemToComment).$promise.then(function (savedItem) {
-	            ctrl.comment = [savedItem].concat(_toConsumableArray(ctrl.comment));
-	            ctrl.itemToComment = {};
-	            //flashesService.displayMessage('Item added!','success');
-	            console.log('comments changed! : This is from posts-page-controller');
-	        });
+	    ctrl.changeComment = function changeComment(id) {
+	        ctrl.itemToComment.id = id;
+	        ctrl.itemToComment.read = true;
+	
+	        console.log("jkgdksjgdashgs====" + ctrl.itemToComment.id);
+	        ctrl.commentAdd(ctrl.itemToComment);
+	        ctrl.itemToComment = {};
+	    };
+	
+	    ctrl.comment = function comment(id) {
+	        ctrl.itemToComment.post_comment = id;
+	        ctrl.commentAdd(ctrl.itemToComment);
+	        console.log("commment" + ctrl.itemToComment.comment);
+	        ctrl.itemToComment = {};
 	    };
 	}
 	
 	exports.default = PostsPageController;
 
 /***/ },
-/* 11 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//  Ramda v0.22.1
@@ -50154,177 +50478,20 @@
 
 
 /***/ },
-/* 12 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _postsItem = __webpack_require__(13);
-	
-	var _postsItem2 = _interopRequireDefault(_postsItem);
-	
-	var _postsItem3 = __webpack_require__(14);
-	
-	var _postsItem4 = _interopRequireDefault(_postsItem3);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var postsItemComponent = {
-	    template: _postsItem2.default,
-	    bindings: {
-	        post: '<',
-	        delete: '&',
-	        update: '&',
-	        save: '&',
-	        postcomment: '&',
-	        changecomment: '&'
-	    },
-	    controller: _postsItem4.default,
-	    controllerAs: 'postsItemCtrl'
-	};
-	
-	exports.default = postsItemComponent;
-
-/***/ },
-/* 13 */
-/***/ function(module, exports) {
-
-	module.exports = "<div class=\"col-xs-3\">\n    <div class=\"panel panel-primary\" ng-show =\"!postsItemCtrl.editMode\">\n        <div class=\"panel-heading\">\n            <ul class=\"nav nav-pills\">\n                <li>\n                    <h3 class=\"panel-title\">\n                    <!-- Modal link here to pop up modal box -->\n                     <a href=\"#\" data-toggle=\"modal\" data-target=\"#myModal\">\n                    Created by: {{postsItemCtrl.post.user}}\n                    </a></h3>\n                </li>\n                <li>\n                    <span class=\"badge pull-right\">Category: {{postsItemCtrl.post.category}}</span>\n                </li>\n                <li class=\"dropdown\">\n              <a href=\"#\" class=\"dropdown-toggle btn btn-info\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"\"><span class=\"caret\"></span></a>\n              <ul class=\"dropdown-menu\" role=\"menu\">\n                <li \n                ng-show=\"postsItemCtrl.addUseMode\">\n                    <a href=\"#\" \n                    ng-click=\"postsItemCtrl.addUse()\">\n                        Use\n                    </a>\n                </li>\n                <li\n                ng-show=\"!postsItemCtrl.addUseMode\">\n                    <a href=\"#\" \n                    ng-click=\"postsItemCtrl.removeUse()\" \n                    >\n                        Undo-Use\n                    </a>\n                </li>\n                <li \n                ng-show=\"postsItemCtrl.addLikeMode\">\n                    <a href=\"#\" \n                    ng-click=\"postsItemCtrl.addLike()\"  >\n                        Like\n                    </a>\n                </li>\n                <li\n                ng-show=\"!postsItemCtrl.addLikeMode\">\n                    <a href=\"#\" \n                    ng-click=\"postsItemCtrl.removeLike()\" \n                    >\n                        Undo-Like\n                    </a>\n                </li>\n                <li>\n                    <a href=\"#\"\n                    ng-click=\"postsItemCtrl.setRateMode()\" >\n                        Rate\n                    </a>\n                </li>\n\n                <li class=\"divider\"></li>\n                <li>\n                    <a href=\"#\" \n                    ng-click=\"postsItemCtrl.setMode('edit')\">\n                        Edit\n                    </a>\n                </li>\n                <li class=\"divider\"></li>\n                <li>\n                    <a href=\"#\"\n                    ng-click=\"postsItemCtrl.deleteItem()\">\n                        Delete\n                    </a>\n                </li>\n              </ul>\n              <li ng-show=\"postsItemCtrl.rateMode\">\n                    <select name=\"rating\" ng-model=\"postsItemCtrl.rating\" >\n                        <option value=1 >\n                            1\n                        </option>\n                        <option value=2>\n                            2\n                        </option>\n                        <option value=3>\n                            3\n                        </option>\n                        <option value=4>\n                            4\n                        </option>\n                        <option value=5>\n                            5\n                        </option>\n                    </select>\n                    <button class=\"btn btn-info btn-xs\" ng-click=\"postsItemCtrl.addRate()\">ok</button>\n                </li>\n            </li>\n                <li>\n                    <span class=\"badge\">\n                    Users: {{postsItemCtrl.post.postusers.length}} \n                    </span>\n                </li>\n                <li>\n                    <span class=\"badge\">\n                    Likes: {{postsItemCtrl.post.likes.length}} \n                    </span>\n                </li>\n                <li>\n                    <span class=\"badge\">\n                    Ratings: {{postsItemCtrl.post.avg_rating | number:0}}\n                    </span>\n                </li>\n            </ul>\n        </div>\n\n        <div class=\"panel-body\">\n            <ul>\n                <li>Title: {{postsItemCtrl.post.title}}</li>\n                <li>Text: {{postsItemCtrl.post.text}}</li>\n                <li>Reference: {{postsItemCtrl.post.reference}}</li>\n            </ul>\n        </div>\n        <div class=\"panel-footer\">\n            <ul ng-show=\"postsItemCtrl.post.comment_set[0]\">\n            Comments ({{postsItemCtrl.post.comment_set.length}})\n            \n                <li ng-repeat=\"data in postsItemCtrl.post.comment_set\" ng-show=\"!data.read\">\n                <a href=\"#\" ng-click=\"postsItemCtrl.changeComment(data.id)\">\n                {{data.comment}} by {{data.comment_by}}\n                </a> \n                </li>\n                <li ng-repeat=\"data in postsItemCtrl.post.comment_set\" ng-show=\"data.read\">\n                {{data.comment}} by {{data.comment_by}}\n                </li>\n            </ul>\n            \n                <form ng-submit=\"postsItemCtrl.addComment()\">\n                    <input ng-model=\"postsItemCtrl.itemToComment.comment\" class=\"form-control\" placeholder=\"comment here\" >\n                    </form>\n\n        </div>\n        <div class=\"panel-footer\">\n            Creadted date: {{postsItemCtrl.post.created_date | date}}\n            Visible: {{postsItemCtrl.post.visible}}\n        </div>\n    </div>\n    <posts-edit\n            ng-show = \"postsItemCtrl.editMode\"\n            post = \"postsItemCtrl.itemToEdit\"\n            save=\"postsItemCtrl.editItem(editedItem)\"\n            cancel=\"postsItemCtrl.setMode('false')\"/>\n\n\n\n\n\n\n\n<!-- Start Modal -->\n  <div class=\"modal fade\" id=\"myModal\" role=\"dialog\">\n    <div class=\"modal-dialog\">\n\n      <!-- Modal content-->\n      <div class=\"modal-content\">\n        <div class=\"modal-header\">\n          <button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\n          <h4 class=\"modal-title\">Modal Header</h4>\n        </div>\n        <div class=\"modal-body\">\n    \n<!-- Plugging in the Panel code - starts-->\n    <div class=\"panel panel-primary\" ng-show =\"!postsItemCtrl.editMode\">\n        <div class=\"panel-heading\">\n            <ul class=\"nav nav-pills\">\n                <li>\n                    <h3 class=\"panel-title\">Created by: {{postsItemCtrl.post.user}}</h3>\n                </li>\n                <li>\n                    <span class=\"badge pull-right\">Category: {{postsItemCtrl.post.category}}</span>\n                </li>\n                <li class=\"dropdown\">\n              <a href=\"#\" class=\"dropdown-toggle btn btn-info\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"\"><span class=\"caret\"></span></a>\n              <ul class=\"dropdown-menu\" role=\"menu\">\n                <li \n                ng-show=\"postsItemCtrl.addUseMode\">\n                    <a href=\"#\" \n                    ng-click=\"postsItemCtrl.addUse()\"  >\n                        Use\n                    </a>\n                </li>\n                <li\n                ng-show=\"!postsItemCtrl.addUseMode\">\n                    <a href=\"#\" \n                    ng-click=\"postsItemCtrl.removeUse()\" \n                    >\n                        Undo-Use\n                    </a>\n                </li>\n                <li \n                ng-show=\"postsItemCtrl.addLikeMode\">\n                    <a href=\"#\" \n                    ng-click=\"postsItemCtrl.addLike()\"  >\n                        Like\n                    </a>\n                </li>\n                <li\n                ng-show=\"!postsItemCtrl.addLikeMode\">\n                    <a href=\"#\" \n                    ng-click=\"postsItemCtrl.removeLike()\" \n                    >\n                        Undo-Like\n                    </a>\n                </li>\n                <li>\n                    <a href=\"#\"\n                    ng-click=\"postsItemCtrl.setRateMode()\" >\n                        Rate\n                    </a>\n                </li>\n\n                <li class=\"divider\"></li>\n                <li>\n                    <a href=\"#\" \n                    ng-click=\"postsItemCtrl.setMode('edit')\">\n                        Edit\n                    </a>\n                </li>\n                <li class=\"divider\"></li>\n                <li>\n                    <a href=\"#\"\n                    ng-click=\"postsItemCtrl.deleteItem()\">\n                        Delete\n                    </a>\n                </li>\n              </ul>\n              <li ng-show=\"postsItemCtrl.rateMode\">\n                    <select name=\"rating\" ng-model=\"postsItemCtrl.rating\" >\n                        <option value=1 >\n                            1\n                        </option>\n                        <option value=2>\n                            2\n                        </option>\n                        <option value=3>\n                            3\n                        </option>\n                        <option value=4>\n                            4\n                        </option>\n                        <option value=5>\n                            5\n                        </option>\n                    </select>\n                    <button class=\"btn btn-info btn-xs\" ng-click=\"postsItemCtrl.addRate()\">ok</button>\n                </li>\n            </li>\n                <li>\n                    <span class=\"badge\">\n                    Users: {{postsItemCtrl.post.postusers.length}} \n                    </span>\n                </li>\n                <li>\n                    <span class=\"badge\">\n                    Likes: {{postsItemCtrl.post.likes.length}} \n                    </span>\n                </li>\n                <li>\n                    <span class=\"badge\">\n                    Ratings: {{postsItemCtrl.post.avg_rating | number:0}}\n                    </span>\n                </li>\n            </ul>\n        </div>\n\n        <div class=\"panel-body\">\n            <ul>\n                <li>Title: {{postsItemCtrl.post.title}}</li>\n                <li>Text: {{postsItemCtrl.post.text}}</li>\n                <li>Reference: {{postsItemCtrl.post.reference}}</li>\n            </ul>\n        </div>\n        <div class=\"panel-footer\">\n            <ul ng-show=\"postsItemCtrl.post.comment_set[0]\">\n            Comments ({{postsItemCtrl.post.comment_set.length}})\n            \n                <li ng-repeat=\"data in postsItemCtrl.post.comment_set\" ng-show=\"!data.read\">\n                <a href=\"#\" ng-click=\"postsItemCtrl.changeComment(data.id)\">\n                {{data.comment}} by {{data.comment_by}}\n                </a> \n                </li>\n                <li ng-repeat=\"data in postsItemCtrl.post.comment_set\" ng-show=\"data.read\">\n                {{data.comment}} by {{data.comment_by}}\n                </li>\n            </ul>\n            \n                <form ng-submit=\"postsItemCtrl.addComment()\">\n                    <input ng-model=\"postsItemCtrl.itemToComment.comment\" class=\"form-control\" placeholder=\"comment here\" >\n                    </form>\n\n        </div>\n        <div class=\"panel-footer\">\n            Creadted date: {{postsItemCtrl.post.created_date | date}}\n            Visible: {{postsItemCtrl.post.visible}}\n        </div>\n    </div>\n    <posts-edit\n            ng-show = \"postsItemCtrl.editMode\"\n            post = \"postsItemCtrl.itemToEdit\"\n            save=\"postsItemCtrl.editItem(editedItem)\"\n            cancel=\"postsItemCtrl.setMode('false')\"/>\n<!-- Plugging in the Panel code - ends-->\n\n\n\n\n\n\n  \n        </div>      \n          \n          \n          \n          \n        </div>\n        <div class=\"modal-footer\">\n          <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n        </div>\n      </div>\n\n    </div>\n  </div> \n<!-- end modal test-- >\n\n\n\n\n</div>\n"
-
-/***/ },
 /* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _ramda = __webpack_require__(11);
-	
-	function PostsItemController() {
-	    var ctrl = this;
-	    ctrl.showControls = false;
-	    ctrl.itemToEdit = {};
-	    ctrl.editMode = false;
-	    ctrl.editRate = {};
-	    ctrl.itemToComment = {};
-	    ctrl.selectedComment = ctrl.post.comment_set[0];
-	
-	    ctrl.setShowControls = function setShowControls(showControls) {
-	        ctrl.showControls = showControls;
-	    };
-	
-	    ctrl.setMode = function setMode(mode) {
-	        if (mode == "edit") {
-	            ctrl.editMode = true;
-	            ctrl.itemToEdit = (0, _ramda.merge)({}, ctrl.post);
-	        } else {
-	            ctrl.editMode = false;
-	        }
-	    };
-	    ctrl.deleteItem = function deleteItem() {
-	        ctrl.delete({ itemToDelete: ctrl.post });
-	    };
-	    ctrl.editItem = function editItem(itemToEdit) {
-	        ctrl.update({ itemToUpdate: itemToEdit });
-	        ctrl.post = itemToEdit;
-	        ctrl.editMode = false;
-	    };
-	
-	    //adding use and undo use of post by users section
-	
-	    ctrl.addUseMode = true;
-	    ctrl.addUse = function addUse() {
-	        ctrl.post.postusers.push(1);
-	        ctrl.update({ itemToUpdate: ctrl.post });
-	        console.log("working adduse in item-controller");
-	        ctrl.addUseMode = false;
-	    };
-	    ctrl.removeUse = function removeUse() {
-	        ctrl.post.postusers.pop(1);
-	        ctrl.update({ itemToUpdate: ctrl.post });
-	        console.log("working removeuse in item-controller");
-	        ctrl.addUseMode = true;
-	    };
-	
-	    //adding Like and undo Like of post by Likes section
-	
-	    ctrl.addLikeMode = true;
-	    ctrl.addLike = function addLike() {
-	        ctrl.post.likes.push(1);
-	        ctrl.update({ itemToUpdate: ctrl.post });
-	        console.log("working addLike in item-controller");
-	        ctrl.addLikeMode = false;
-	    };
-	    ctrl.removeLike = function removeLike() {
-	        ctrl.post.likes.pop(1);
-	        ctrl.update({ itemToUpdate: ctrl.post });
-	        console.log("working removeLike in item-controller");
-	        ctrl.addLikeMode = true;
-	    };
-	
-	    //rating the post section 
-	    ctrl.rating = 1;
-	    ctrl.rateMode = false;
-	    ctrl.setRateMode = function setRateMode(mode) {
-	        ctrl.rateMode = true;
-	        console.log("rateMode = true");
-	    };
-	    ctrl.addRate = function addRate() {
-	        ctrl.itemToEdit = {};
-	        ctrl.itemToEdit.rating = ctrl.rating;
-	        ctrl.itemToEdit.rated_by = 2;
-	        ctrl.itemToEdit.post_rated = ctrl.post.id;
-	        ctrl.save({ itemToRate: ctrl.itemToEdit });
-	        console.log("working rating in item-controller");
-	        ctrl.rateMode = false;
-	    };
-	
-	    //comment the post section and mark as read
-	
-	    ctrl.addComment = function addComment() {
-	        if (ctrl.itemToComment.comment != null) {
-	            ctrl.itemToComment.comment_by = 2;
-	            ctrl.itemToComment.post_comment = ctrl.post.id;
-	            ctrl.itemToComment.read = false;
-	            ctrl.postcomment({ itemToComment: ctrl.itemToComment });
-	        } else {
-	            console.log("enter something to comment");
-	        }
-	        console.log("working === comment in item-controller");
-	        ctrl.itemToComment = {};
-	    };
-	    ctrl.changeComment = function changeComment(id) {
-	        ctrl.itemToComment.id = id;
-	        ctrl.itemToComment.read = true;
-	        ctrl.itemToComment.post_comment = ctrl.post.id;
-	        ctrl.changecomment({ itemToComment: ctrl.itemToComment });
-	        console.log("mark as read in item-controller");
-	    };
-	}
-	exports.default = PostsItemController;
-
-/***/ },
-/* 15 */
-/***/ function(module, exports, __webpack_require__) {
-
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 	
-	var _postsEdit = __webpack_require__(16);
+	var _postsEdit = __webpack_require__(15);
 	
 	var _postsEdit2 = _interopRequireDefault(_postsEdit);
 	
-	var _postsEdit3 = __webpack_require__(17);
+	var _postsEdit3 = __webpack_require__(16);
 	
 	var _postsEdit4 = _interopRequireDefault(_postsEdit3);
 	
@@ -50332,11 +50499,6 @@
 	
 	var postsEditComponent = {
 	    template: _postsEdit2.default,
-	    bindings: {
-	        save: '&',
-	        post: '<',
-	        cancel: '&?'
-	    },
 	    controller: _postsEdit4.default,
 	    controllerAs: 'postsEditCtrl'
 	};
@@ -50344,41 +50506,44 @@
 	exports.default = postsEditComponent;
 
 /***/ },
-/* 16 */
+/* 15 */
 /***/ function(module, exports) {
 
-	module.exports = "\n<form ng-submit=\"postsEditCtrl.saveItem()\">\n    <div class=\"panel panel-primary form-group \">\n        <div class=\"panel-heading\">\n            <ul class=\"nav nav-pills\">\n                <li>\n                    <h3 class=\"panel-title\">\n                        <input ng-model=\"postsEditCtrl.editedItem.user\" class=\"form-control\" placeholder=\"user\" ></input>\n                    </h3>\n                </li>\n                <li>\n                    <span class=\"badge pull-right\">\n                        <select name=\"category\" ng-model=\"postsEditCtrl.editedItem.category\" class=\"form-control\">\n                            <option value=\"Art\">\n                                Art\n                            </option>\n                            <option value=\"Science\">\n                                Science\n                            </option>\n                            <option value=\"Finance\">\n                                Finance\n                            </option>\n                            <option value=\"Technology\">\n                                Technology\n                            </option>\n                            <option value=\"Business\">\n                                Business\n                            </option>\n                        </select>\n                    </span>\n                </li>\n            </ul>\n        </div>\n        <div class=\"panel-body\">\n            <input ng-model=\"postsEditCtrl.editedItem.title\" class=\"form-control\" placeholder=\"title\" ></input>\n            <input ng-model=\"postsEditCtrl.editedItem.text\" class=\"form-control\" placeholder=\"Text\" ></input>\n            <input ng-model=\"postsEditCtrl.editedItem.reference\" class=\"form-control\" placeholder=\"Reference\"></input>\n        </div>\n        <div class=\"panel-footer\">\n            <select name=\"visible\" ng-model=\"postsEditCtrl.editedItem.visible\" class=\"form-control\">\n                <option value=\"true\">\n                    Public\n                </option>\n                <option value=\"false\">\n                    Private\n                </option>\n            </select>\n        </div>\n        <button \n        class=\"btn btn-default\" \n        type=\"submit\"\n        ng-disabled=\"!postsEditCtrl.editedItem.text\"\n        >\n            Save Post\n        </button>\n        <button\n        class=\"btn btn-danger\"\n        type = \"button\"\n        ng-show=\"postsEditCtrl.cancel\"\n        ng-click=\"postsEditCtrl.cancel()\"\n        >\n            Cancel\n        </button>\n    </div>\n</form>"
+	module.exports = "\n<form ng-submit=\"postsEditCtrl.saveItem(editedItem)\">\n    <div class=\"panel panel-primary form-group \">\n        <div class=\"panel-heading\">\n            <ul class=\"nav nav-pills\">\n                <li>\n                    <h3 class=\"panel-title\">\n                    \n            <input ng-model=\"postsEditCtrl.editedItem.title\" class=\"form-control\" placeholder=\"title\" ></input>\n                    </h3>\n                </li>\n                <li>\n                    <span class=\"badge pull-right\">\n                        <select name=\"category\" ng-model=\"postsEditCtrl.editedItem.category\" class=\"form-control\">\n                            <option value=\"Art\">\n                                Art\n                            </option>\n                            <option value=\"Science\">\n                                Science\n                            </option>\n                            <option value=\"Finance\">\n                                Finance\n                            </option>\n                            <option value=\"Technology\">\n                                Technology\n                            </option>\n                            <option value=\"Business\">\n                                Business\n                            </option>\n                        </select>\n                    </span>\n                </li>\n            </ul>\n        </div>\n        <div class=\"panel-body\">\n            <input ng-model=\"postsEditCtrl.editedItem.text\" class=\"form-control\" placeholder=\"Text\" ></input>\n            <input ng-model=\"postsEditCtrl.editedItem.reference\" class=\"form-control\" placeholder=\"Reference\"></input>\n        </div>\n        <div class=\"panel-footer\">\n            <select name=\"visible\" ng-model=\"postsEditCtrl.editedItem.visible\" class=\"form-control\">\n                <option value=\"true\">\n                    Public\n                </option>\n                <option value=\"false\">\n                    Private\n                </option>\n            </select>\n        </div>\n        <button class=\"btn btn-primary\" type=\"submit\">\n            Add\n        </button>\n        <button\n        class=\"btn btn-danger\"\n        type = \"button\"\n        ng-click=\"postsEditCtrl.cancel()\"\n        >\n            Cancel\n        </button>\n    </div>\n</form>"
 
 /***/ },
-/* 17 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 	
-	var _ramda = __webpack_require__(11);
+	var _ramda = __webpack_require__(13);
 	
-	function PostsEditController() {
+	function PostsEditController(postsAPIService, $state) {
 	    var ctrl = this;
 	    ctrl.editedItem = {};
 	    ctrl.editedItem.category = "ART";
 	    ctrl.editedItem.visible = true;
-	    ctrl.$onChanges = function $onChanges() {
-	        ctrl.editedItem = (0, _ramda.merge)({}, ctrl.post);
+	
+	    ctrl.saveItem = function saveItem(item) {
+	        postsAPIService.addPost(item).then(function (data) {
+	            console.log(data);
+	            $state.go('posts');
+	        });
 	    };
-	    ctrl.saveItem = function saveItem() {
-	        ctrl.save({ editedItem: ctrl.editedItem });
-	        ctrl.editedItem = {};
+	    ctrl.cancel = function cancel() {
+	        $state.go('posts');
 	    };
 	}
 	
 	exports.default = PostsEditController;
 
 /***/ },
-/* 18 */
+/* 17 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -50386,32 +50551,55 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	function postsAPIService($resource) {
-	    var api = {
-	        posts: $resource('/api/posts/:id/', { id: '@id' }, {
-	            update: {
-	                method: 'PUT'
-	            }
-	        }),
+	function postsAPIService($resource, $http, $q) {
+	    var postsResource = $resource('/api/posts/:id/', { id: '@id' });
+	    var rateResource = $resource('/api/rate/:id/', { id: '@id' });
+	    var commentResource = $resource('/api/comment/:id/', { id: '@id' });
 	
-	        rate: $resource('/api/rate/:id/', { id: '@id' }),
+	    var me = null;
 	
-	        comment: $resource('/api/comment/:id/', { id: '@id' }, {
-	            postcomment: {
-	                method: 'POST'
-	            },
-	            changecomment: {
-	                method: 'PUT'
+	    return {
+	        getMe: function getMe() {
+	            if (me) {
+	                return $q.when(me);
 	            }
-	        })
+	            return $http.get('/api/me/').then(function (response) {
+	                me = response.data;
+	                return me;
+	            });
+	        },
+	        getAllPosts: function getAllPosts() {
+	            return postsResource.get({}).$promise.then(function (data) {
+	                return data.results;
+	            });
+	        },
+	        getPost: function getPost(id) {
+	            return postsResource.get({ id: id }).$promise.then(function (data) {
+	                return data;
+	            });
+	        },
+	        addPost: function addPost(postToAdd) {
+	            return postsResource.save(postToAdd).$promise;
+	        },
+	        removePost: function removePost(postToRemove) {
+	            return postsResource.remove(postToRemove).$promise;
+	        },
+	        addRate: function addRate(rateItem) {
+	            return rateResource.save(rateItem).$promise;
+	        },
+	        removeRate: function removeRate(rateToRemove) {
+	            return rateResource.delete(rateToRemove).$promise;
+	        },
+	        addComment: function addComment(commentItem) {
+	            return commentResource.save(commentItem).$promise;
+	        }
 	    };
-	    return api;
 	}
 	
 	exports.default = postsAPIService;
 
 /***/ },
-/* 19 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50424,17 +50612,13 @@
 	
 	var _angular2 = _interopRequireDefault(_angular);
 	
-	__webpack_require__(6);
+	__webpack_require__(8);
 	
-	var _userPageComponent = __webpack_require__(20);
+	var _userPageComponent = __webpack_require__(19);
 	
 	var _userPageComponent2 = _interopRequireDefault(_userPageComponent);
 	
-	var _chat = __webpack_require__(23);
-	
-	var _chat2 = _interopRequireDefault(_chat);
-	
-	var _usersApiService = __webpack_require__(26);
+	var _usersApiService = __webpack_require__(22);
 	
 	var _usersApiService2 = _interopRequireDefault(_usersApiService);
 	
@@ -50442,12 +50626,12 @@
 	
 	var UserModule = _angular2.default.module('user', ['ngResource']).config(function ($resourceProvider) {
 	    $resourceProvider.defaults.stripTrailingSlashes = false;
-	}).factory('userAPIService', _usersApiService2.default).component('userPage', _userPageComponent2.default).component('chat', _chat2.default);
+	}).factory('userAPIService', _usersApiService2.default).component('userPage', _userPageComponent2.default);
 	
 	exports.default = UserModule;
 
 /***/ },
-/* 20 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50456,11 +50640,11 @@
 	    value: true
 	});
 	
-	var _userPage = __webpack_require__(21);
+	var _userPage = __webpack_require__(20);
 	
 	var _userPage2 = _interopRequireDefault(_userPage);
 	
-	var _userPageController = __webpack_require__(22);
+	var _userPageController = __webpack_require__(21);
 	
 	var _userPageController2 = _interopRequireDefault(_userPageController);
 	
@@ -50468,6 +50652,11 @@
 	
 	var userPageComponent = {
 	    template: _userPage2.default,
+	    bindings: {
+	        me: '<',
+	        users: '<',
+	        chat: '<'
+	    },
 	    controller: _userPageController2.default,
 	    controllerAs: 'userPageCtrl'
 	};
@@ -50475,57 +50664,127 @@
 	exports.default = userPageComponent;
 
 /***/ },
-/* 21 */
+/* 20 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"row\">\n    <div class=\"col-md-12\">\n        <div class=\"row\">\n            <div class=\"col-xs-3\" ng-repeat= \"profile in userPageCtrl.user track by profile.id\">\n                <div class=\"card\" >\n                    <img class=\"card-img-top\" src=\"https://d2wucpkmh57zie.cloudfront.net/wp-content/uploads/2015/10/stocksnap.jpg\" alt=\"Card image cap\">\n                    <div class=\"card-block\">\n                        <p class=\"card-text\">\n                            <li>\n                                user: {{profile.username}}\n                            </li>\n                            <li>\n                                email: {{profile.email}}\n                            </li>\n                            <li>\n                                PostsUsing: {{profile.postusing}}\n                            </li>\n                            <li>\n                                PostsLiked: {{profile.liked_post}}\n                            </li>\n                            <li>\n                                UserRating: {{profile.rating_user}}\n                            </li>\n                            <li>\n                                Notification for comments: {{profile.comment_notification}}\n                            </li>\n<ul ng-show=\"profile.receiver[0]\">\nmessage:  ({{profile.receiver.length}})\n\n<li ng-repeat=\"data in profile.receiver\" ng-show=\"!data.read\">\n<a href=\"#\" ng-click=\"userPageCtrl.changeChat(data.id)\">\n{{data.message}} by {{data.sender}}\n</a> \n</li>\n<li ng-repeat=\"data in profile.receiver\" ng-show=\"data.read\">\n{{data.message}} by {{data.sender}}\n</li>\n</ul>\n\n<form ng-submit=\"userPageCtrl.addChat(data.id)\">\n<input ng-model=\"userPageCtrl.itemToChat.message\" class=\"form-control\" placeholder=\"comment here\" >\n</form>\n                        </p>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n        <div class=\"col-xs-3\">\n            <h4>CHAT BOX</h4>\n        <chat\n        profile = \"profile\"\n        save = \"userPageCtrl.chatSave(chatToSave\n        )\"/>\n        </div>\n        \n        </div>\n    </div>\n</div>\n"
+	module.exports = "<script>\n$(document).ready(function(){\n    $('[data-toggle=\"tooltip\"]').tooltip(); \n});\n</script>\n<div class=\"container\">\n<div class=\"row\">\n    <div class=\"col-xs-4\">\n        <img class=\"img-responsive\" src=\"http://cdn.pcwallart.com/images/the-plain-color-green-wallpaper-2.jpg\" alt=\"\" >\n        <img class=\"img-responsive\" src=\"https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSGww8v58IIuzgry9JLJM_hOoffD6qUUwYNzIyJpgrPRzK6_fWFaw\" alt=\"\" ng-show=\"img2\">\n        <img class=\"img-responsive\" src=\"http://wallpaper.zone/img/5161146.jpg\" alt=\"\" ng-show=\"img3\">\n    </div>\n        <div class=\"col-xs-4\">\n            <div class=\"well well-sm\">Username: {{userPageCtrl.me.username}}</div>\n            <div class=\"well well-sm\">Firstname: {{userPageCtrl.me.username}}</div>\n            <div class=\"well well-sm\">Email:{{userPageCtrl.me.email}}</div>\n            <div class=\"well well-sm\">Joined: {{userPageCtrl.me.joined| date}}</div>\n            <div class=\"well well-sm\" ng-show=\"userPageCtrl.me.rating\">{{userPageCtrl.me.rating}}</div>\n        </div>\n        <div class=\"col-xs-4\">\n            <a href=\"#\" data-toggle=\"tooltip\" title=\"userPageCtrl.me.chat_notification\">\n            <div class=\"well well-sm\" ng-show=\"userPageCtrl.me.chat_notification\"> \n            You got chat notification\n            </div>\n            </a>\n            <div class=\"well well-sm\" ng-show=\"userPageCtrl.me.comment_notification\"> You got comment notification</div>\n            <div class=\"well well-sm\">\n            \n            Chat with \n                <select name=\"chat-with\" ng-model=\"userPageCtrl.receiverid\" >\n                    <option ng-repeat=\"profile in userPageCtrl.users track by profile.id\" value=\"{{profile.id}}\" >\n                    {{profile.username}}</option>\n                </select>\n                profile id herer --- {{userPageCtrl.receiverid}} \n            <a href=\"\" data-toggle=\"modal\" data-target=\"#myModal\" ng-click=\"userPageCtrl.chatlog()\">\n            <i class=\"fa fa-check\" aria-hidden=\"true\"></i>\n            </a></div>\n        </div>\n</div>\n</div>\n\n<!-- chat modal box opens -->\n <div class=\"modal fade\" id=\"myModal\" role=\"dialog\">\n    <div class=\"modal-dialog\">\n\n      <!-- Modal content-->\n        <div class=\"modal-content\">\n            <div class=\"modal-header\">\n                Chat Box\n            </div>\n            <div class=\"modal-body\">\n                <p class=\"well well-sm\" ng-repeat=\"chat in userPageCtrl.thischat\"> \n                {{chat.message}} <sub>by {{chat.sender[0]}} [{{chat.time | date:'MM/dd/yyyy @ h:mma'}}]</sub>\n                </p>\n            </div>\n            <div class=\"modal-footer\">\n                <form ng-submit=\"userPageCtrl.saveChat()\">\n                    <input ng-model=\"userPageCtrl.itemToChat.message\" class=\"form-control\" placeholder=\"message here\" >\n                </form>\n                <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n            </div>\n        </div>\n    </div>\n</div>"
+
+/***/ },
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _ramda = __webpack_require__(13);
+	
+	function UserPageController(userAPIService, $state) {
+	    var ctrl = this;
+	    ctrl.editedItem = {};
+	    ctrl.loginItem = {};
+	    ctrl.itemToChat = {};
+	    ctrl.showChat = false;
+	    ctrl.mychat = [];
+	    ctrl.sent = [];
+	    ctrl.received = [];
+	    ctrl.thischat = [];
+	    ctrl.receiverid = null;
+	    ctrl.mychats = function mychats() {
+	        console.log("here" + ctrl.me.id);
+	        if (ctrl.chat) {
+	            for (var data in ctrl.chat) {
+	                if (ctrl.me.id == ctrl.chat[data].sender[1]) {
+	                    ctrl.sent.push(ctrl.chat[data]);
+	                    ctrl.mychat.push(ctrl.chat[data]);
+	                }
+	                if (ctrl.me.id == ctrl.chat[data].receiver) {
+	                    ctrl.received.push(ctrl.chat[data]);
+	                    ctrl.mychat.push(ctrl.chat[data]);
+	                }
+	            }
+	        };
+	    };
+	    ctrl.mychats();
+	
+	    ctrl.showChatNotification = function showChatNotification() {
+	        ctrl.showChat = true;
+	    };
+	
+	    ctrl.chatlog = function chatlog() {
+	        ctrl.mychat;
+	        console.log("my chat =====", ctrl.mychat);
+	        ctrl.receiverid;
+	        console.log("receiverid ;;;;", ctrl.receiverid);
+	        for (var dchat in ctrl.mychat) {
+	            console.log("Loop is working");
+	            console.log("userdasfid id .  ", ctrl.receiverid);
+	            if (ctrl.receiverid == ctrl.mychat[dchat].sender[1]) {
+	
+	                ctrl.thischat.push(ctrl.mychat[dchat]);
+	            } else if (ctrl.receiverid == ctrl.mychat[dchat].receiver) {
+	                ctrl.thischat.push(ctrl.mychat[dchat]);
+	            }
+	        }
+	        console.log("this chat is ", ctrl.thischat);
+	    };
+	
+	    ctrl.saveChat = function saveChat() {
+	        ctrl.itemToChat.receiver = ctrl.receiverid;
+	        console.log(ctrl.receiverid);
+	        console.log(ctrl.itemToChat);
+	        console.log("saveChat function working");
+	        userAPIService.saveChat(ctrl.itemToChat).then(function () {
+	            $state.reload();
+	        });
+	        ctrl.itemToChat = {};
+	    };
+	    ctrl.readChat = function readChat(id) {
+	        ctrl.itemToChat.id = id;
+	        ctrl.itemToChat.read = true;
+	        console.log("readchat function working", ctrl.itemToChat);
+	        userAPIService.saveChat(ctrl.itemToChat).then(function () {
+	            $state.reload();
+	        });
+	        ctrl.itemToChat = {};
+	    };
+	}
+	
+	exports.default = UserPageController;
 
 /***/ },
 /* 22 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	function userAPIService($resource) {
+	    var userResource = $resource('/api/user/:id/', { id: '@id' });
+	    var chatResource = $resource('/api/chat/:id/', { id: '@id' });
 	
-	var _ramda = __webpack_require__(11);
-	
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-	
-	function UserPageController(userAPIService, $interval) {
-	    var ctrl = this;
-	    ctrl.editedItem = {};
-	    ctrl.loginItem = {};
-	
-	    function getUser() {
-	        userAPIService.user.get().$promise.then(function (data) {
-	            ctrl.user = data.results;
-	            ctrl.itemsCount = ctrl.user.length;
-	        });
-	    }
-	    getUser();
-	    $interval(getUser, 9000);
-	
-	    //saving chat messages
-	    function getChat() {
-	        userAPIService.chat.get().$promise.then(function (data) {
-	            ctrl.chat = data.results;
-	        });
-	    }
-	    getChat();
-	    $interval(getChat, 9000);
-	    ctrl.saveChat = function saveChat(editedItem) {
-	        userAPIService.chat.save(editedItem).$promise.then(function (savedItem) {
-	            ctrl.chat = [savedItem].concat(_toConsumableArray(ctrl.chat));
-	            //flashesService.displayMessage('Chatadded!','success');
-	            console.log('Chatadded! : This is from posts-page-controller');
-	        });
+	    return {
+	        getUser: function getUser() {
+	            return userResource.get({}).$promise.then(function (data) {
+	                return data.results;
+	            });
+	        },
+	        getChat: function getChat() {
+	            return chatResource.get({}).$promise.then(function (data) {
+	                return data.results;
+	            });
+	        },
+	        saveChat: function saveChat(chatItems) {
+	            return chatResource.save(chatItems).$promise;
+	        }
 	    };
 	}
 	
-	exports.default = UserPageController;
+	exports.default = userAPIService;
 
 /***/ },
 /* 23 */
@@ -50537,100 +50796,11 @@
 	    value: true
 	});
 	
-	var _chat = __webpack_require__(24);
-	
-	var _chat2 = _interopRequireDefault(_chat);
-	
-	var _chat3 = __webpack_require__(25);
-	
-	var _chat4 = _interopRequireDefault(_chat3);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var chatComponent = {
-	    template: _chat2.default,
-	    bindings: {
-	        save: '&'
-	    },
-	    controller: _chat4.default,
-	    controllerAs: 'chatCtrl'
-	};
-	
-	exports.default = chatComponent;
-
-/***/ },
-/* 24 */
-/***/ function(module, exports) {
-
-	module.exports = "<ul class=\"nav nav-pills nav-stacked\">\n  <li class=\"active\">\n  <a href=\"#\">{{chatCtrl.profile.receiver.message}}</a></li>\n  <li><a href=\"#\">{{chatCtrl.profile.receiver.message}}</a>\n  </li>\n</ul>\n<form ng-submit=\"chatCtrl.saveChat()\">\nsend to : \n<input ng-model=\"chatCtrl.ChatItem.receiver\" class=\"form-control\" placeholder=\"options are 2,3,4\">\n\n<input ng-model=\"chatCtrl.ChatItem.message\" class=\"form-control\" placeholder=\"message here\" >\n</form>"
-
-/***/ },
-/* 25 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _ramda = __webpack_require__(11);
-	
-	function ChatController() {
-	    var ctrl = this;
-	    ctrl.ChatItem = {};
-	
-	    ctrl.saveChat = function saveChat() {
-	        ctrl.ChatItem.sender = 1;
-	        ctrl.save({ chatToSave: ctrl.ChatItem });
-	        ctrl.ChatItem = {};
-	        console.log("Chat working at Chat -page");
-	    };
-	}
-	
-	exports.default = ChatController;
-
-/***/ },
-/* 26 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	function userAPIService($resource) {
-	    var api = {
-	        currentuser: $resource('/api/me/'),
-	
-	        user: $resource('/api/user/:id/', { id: '@id' }, {
-	            update: {
-	                method: 'PUT'
-	            }
-	        }),
-	
-	        chat: $resource('/api/chat/:id/', { id: '@id' })
-	    };
-	    return api;
-	}
-	
-	exports.default = userAPIService;
-
-/***/ },
-/* 27 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _app = __webpack_require__(28);
+	var _app = __webpack_require__(24);
 	
 	var _app2 = _interopRequireDefault(_app);
 	
-	var _app3 = __webpack_require__(29);
+	var _app3 = __webpack_require__(25);
 	
 	var _app4 = _interopRequireDefault(_app3);
 	
@@ -50645,13 +50815,13 @@
 	exports.default = appComponent;
 
 /***/ },
-/* 28 */
+/* 24 */
 /***/ function(module, exports) {
 
-	module.exports = "<header>\n    <nav class=\"navbar navbar-default\">\n      <div class=\"container-fluid\">\n        <div class=\"navbar-header\">\n          <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#bs-example-navbar-collapse-1\">\n            <span class=\"sr-only\">Toggle navigation</span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n          </button>\n          <a class=\"navbar-brand\" ui-sref=\"otherwise\">\n            <i class=\"fa fa-lightbulb-o\" aria-hidden=\"true\"></i>\n            Ideas\n          </a>\n        </div>\n\n        <div class=\"collapse navbar-collapse\" id=\"bs-example-navbar-collapse-1\">\n          <ul class=\"nav navbar-nav\">\n            <li class=\"active\">\n            <a href=\"#\">Welcome {{appCtrl.currentuser.username}} <span class=\"sr-only\">(current)\n            </span></a></li>\n            <li ><a ui-sref= \"user\">User</a></li>\n\n            <li class=\"dropdown\">\n              <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\">Dropdown <span class=\"caret\"></span></a>\n              <ul class=\"dropdown-menu\" role=\"menu\">\n                <li ><a href=\"/accounts/logout/\" >Logout</a></li>\n                <li class=\"divider\"></li>\n                <li><a href=\"#\">Separated link</a></li>\n                <li class=\"divider\"></li>\n                <li><a href=\"#\">One more separated link</a></li>\n              </ul>\n            </li>\n          </ul>\n          \n          <ul class=\"nav navbar-nav navbar-right\">\n            <li>\n                <form class=\"navbar-form \" role=\"search\">\n                <div class=\"form-group\">\n                  <input type=\"text\" ng-model=\"appCtrl.filter\"  class=\"form-control\" placeholder=\"Search\">\n                </div>\n                <button type=\"submit\" class=\"btn btn-default\">Submit</button>\n              </form>\n            </li>\n            <li><a ui-sref=\"posts\">Posts</a></li>\n          </ul>\n        </div>\n      </div>\n    </nav>\n</header>\n<div class=\"container-fluid\">\n    <img src=\"https://static.pexels.com/photos/5076/light-person-woman-fire.jpeg\" alt=\"\">\n    <p>\n      Dont keep your Ideas with yourself. Share it with us. Find Ideas. Make your dream ideas come true.\n    </p>\n</div>\n\n\n<div class=\"container-fluid\">\n    <ui-view></ui-view>\n</div>"
+	module.exports = "<header>\n    <nav class=\"navbar navbar-default\">\n      <div class=\"container-fluid\">\n        <div class=\"navbar-header\">\n          <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#bs-example-navbar-collapse-1\">\n            <span class=\"sr-only\">Toggle navigation</span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n          </button>\n          <a class=\"navbar-brand\" ui-sref=\"home\">\n            <i class=\"fa fa-lightbulb-o\" aria-hidden=\"true\"></i>\n            Ideas\n          </a>\n        </div>\n\n        <div class=\"collapse navbar-collapse\" id=\"bs-example-navbar-collapse-1\">\n          <ul class=\"nav navbar-nav\">\n            <li class=\"active\">\n            <a href=\"#\">Welcome {{appCtrl.currentuser.username}} <span class=\"sr-only\">(current)\n            </span></a></li>\n            <li ><a ui-sref= \"user\">User</a></li>\n\n            <li class=\"dropdown\">\n              <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\">Dropdown <span class=\"caret\"></span></a>\n              <ul class=\"dropdown-menu\" role=\"menu\">\n                <li ><a href=\"/accounts/logout/\" >Logout</a></li>\n                <li class=\"divider\"></li>\n                <li><a href=\"#\">Separated link</a></li>\n                <li class=\"divider\"></li>\n                <li><a href=\"#\">One more separated link</a></li>\n              </ul>\n            </li>\n          </ul>\n          \n          <ul class=\"nav navbar-nav navbar-right\">\n            <li>\n                <form class=\"navbar-form \" role=\"search\">\n                <div class=\"form-group\">\n                  <input type=\"text\" ng-model=\"appCtrl.filter\"  class=\"form-control\" placeholder=\"Search\">\n                </div>\n                <button type=\"submit\" class=\"btn btn-default\">Submit</button>\n              </form>\n            </li>\n            <li><a ui-sref=\"posts\">Posts</a></li>\n          </ul>\n        </div>\n      </div>\n    </nav>\n</header>\n<div class=\"container-fluid\">\n    <!-- <img src=\"https://static.pexels.com/photos/5076/light-person-woman-fire.jpeg\" alt=\"\">\n    <p>\n      Dont keep your Ideas with yourself. Share it with us. Find Ideas. Make your dream ideas come true.\n    </p> -->\n</div>\n\n\n<div class=\"container-fluid\">\n    <ui-view></ui-view>\n</div>"
 
 /***/ },
-/* 29 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50660,18 +50830,14 @@
 	    value: true
 	});
 	
-	var _ramda = __webpack_require__(11);
+	var _ramda = __webpack_require__(13);
 	
-	function AppController(userAPIService, $interval) {
+	function AppController(postsAPIService, $interval) {
 	    var ctrl = this;
 	
-	    function getCurrentUser() {
-	        userAPIService.currentuser.get().$promise.then(function (data) {
-	            ctrl.currentuser = data;
-	        });
-	    }
-	    getCurrentUser();
-	    $interval(getCurrentUser, 9000);
+	    postsAPIService.getMe().then(function (me) {
+	        ctrl.currentuser = me;
+	    });
 	}
 	exports.default = AppController;
 

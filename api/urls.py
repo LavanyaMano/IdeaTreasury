@@ -19,4 +19,3 @@ urlpatterns = [
     url(r'^',include(router.urls)),
 ]
 
-# installed third party package for registration - django-rest-auth

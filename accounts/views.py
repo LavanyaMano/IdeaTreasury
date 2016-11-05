@@ -18,7 +18,7 @@ def register(request):
             new_user.save()
             messages.success(request, 'User created!')
 
-            return redirect('accounts:login')
+            return redirect('idea:app')
     else:
         form = UserRegistrationForm()
 

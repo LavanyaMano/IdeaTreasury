@@ -1,59 +1,64 @@
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip(); 
+});
+</script>
+<div class="container">
 <div class="row">
-    <div class="col-md-12">
-        <div class="row">
-            <div class="col-xs-3" ng-repeat= "profile in userPageCtrl.user track by profile.id">
-                <div class="card" >
-                    <img class="card-img-top" src="https://d2wucpkmh57zie.cloudfront.net/wp-content/uploads/2015/10/stocksnap.jpg" alt="Card image cap">
-                    <div class="card-block">
-                        <p class="card-text">
-                            <li>
-                                user: {{profile.username}}
-                            </li>
-                            <li>
-                                email: {{profile.email}}
-                            </li>
-                            <li>
-                                PostsUsing: {{profile.postusing}}
-                            </li>
-                            <li>
-                                PostsLiked: {{profile.liked_post}}
-                            </li>
-                            <li>
-                                UserRating: {{profile.rating_user}}
-                            </li>
-                            <li>
-                                Notification for comments: {{profile.comment_notification}}
-                            </li>
-<ul ng-show="profile.receiver[0]">
-message:  ({{profile.receiver.length}})
-
-<li ng-repeat="data in profile.receiver" ng-show="!data.read">
-<a href="#" ng-click="userPageCtrl.changeChat(data.id)">
-{{data.message}} by {{data.sender}}
-</a> 
-</li>
-<li ng-repeat="data in profile.receiver" ng-show="data.read">
-{{data.message}} by {{data.sender}}
-</li>
-</ul>
-
-<form ng-submit="userPageCtrl.addChat(data.id)">
-<input ng-model="userPageCtrl.itemToChat.message" class="form-control" placeholder="comment here" >
-</form>
-                        </p>
-                    </div>
-                </div>
+    <div class="col-xs-4">
+        <img class="img-responsive" src="http://cdn.pcwallart.com/images/the-plain-color-green-wallpaper-2.jpg" alt="" >
+        <img class="img-responsive" src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSGww8v58IIuzgry9JLJM_hOoffD6qUUwYNzIyJpgrPRzK6_fWFaw" alt="" ng-show="img2">
+        <img class="img-responsive" src="http://wallpaper.zone/img/5161146.jpg" alt="" ng-show="img3">
+    </div>
+        <div class="col-xs-4">
+            <div class="well well-sm">Username: {{userPageCtrl.me.username}}</div>
+            <div class="well well-sm">Firstname: {{userPageCtrl.me.username}}</div>
+            <div class="well well-sm">Email:{{userPageCtrl.me.email}}</div>
+            <div class="well well-sm">Joined: {{userPageCtrl.me.joined| date}}</div>
+            <div class="well well-sm" ng-show="userPageCtrl.me.rating">{{userPageCtrl.me.rating}}</div>
+        </div>
+        <div class="col-xs-4">
+            <a href="#" data-toggle="tooltip" title="userPageCtrl.me.chat_notification">
+            <div class="well well-sm" ng-show="userPageCtrl.me.chat_notification"> 
+            You got chat notification
             </div>
+            </a>
+            <div class="well well-sm" ng-show="userPageCtrl.me.comment_notification"> You got comment notification</div>
+            <div class="well well-sm">
+            
+            Chat with 
+                <select name="chat-with" ng-model="userPageCtrl.receiverid" >
+                    <option ng-repeat="profile in userPageCtrl.users track by profile.id" value="{{profile.id}}" >
+                    {{profile.username}}</option>
+                </select>
+                profile id herer --- {{userPageCtrl.receiverid}} 
+            <a href="" data-toggle="modal" data-target="#myModal" ng-click="userPageCtrl.chatlog()">
+            <i class="fa fa-check" aria-hidden="true"></i>
+            </a></div>
         </div>
-        <div class="row">
-        <div class="col-xs-3">
-            <h4>CHAT BOX</h4>
-        <chat
-        profile = "profile"
-        save = "userPageCtrl.chatSave(chatToSave
-        )"/>
-        </div>
-        
+</div>
+</div>
+
+<!-- chat modal box opens -->
+ <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                Chat Box
+            </div>
+            <div class="modal-body">
+                <p class="well well-sm" ng-repeat="chat in userPageCtrl.thischat"> 
+                {{chat.message}} <sub>by {{chat.sender[0]}} [{{chat.time | date:'MM/dd/yyyy @ h:mma'}}]</sub>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <form ng-submit="userPageCtrl.saveChat()">
+                    <input ng-model="userPageCtrl.itemToChat.message" class="form-control" placeholder="message here" >
+                </form>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
 </div>
