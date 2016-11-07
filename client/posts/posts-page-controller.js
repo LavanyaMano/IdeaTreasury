@@ -10,6 +10,8 @@ function PostsPageController(postsAPIService,$state, $window){
     ctrl.itemToEdit={};
     ctrl.addMode= false;
     ctrl.editMode = false;
+    ctrl.addUseMode = true;
+    ctrl.addLikeMode = true;
 
     ctrl.setMode = function setMode(mode){
         if (mode == "add"){
@@ -19,6 +21,9 @@ function PostsPageController(postsAPIService,$state, $window){
         else if(mode == "edit"){
             ctrl.addMode = false;
             ctrl.editMode =true;
+        }
+        else if(mode == "rate"){
+            ctrl.rateMode = true;
         }
         else{
             ctrl.addMode = false;
@@ -37,6 +42,7 @@ function PostsPageController(postsAPIService,$state, $window){
     };
      
      ctrl.rateAdd = function rateAdd(item){
+        
         postsAPIService.addRate(item).then(()=>$state.reload())
 
      };
@@ -44,10 +50,13 @@ function PostsPageController(postsAPIService,$state, $window){
         postsAPIService.removeRate(item).then(()=>$state.reload())
      };
      ctrl.commentAdd = function commentAdd(item){
-        postsAPIService.addComment(item)
+        postsAPIService.addComment(item).then(()=>$state.reload())
      };
 
-
+     ctrl.setEditedItems = function setEditedItems(post){
+        ctrl.itemToEdit = post;
+     }
+     
      ctrl.changeComment = function changeComment(id){
         ctrl.itemToComment.id = id;
         ctrl.itemToComment.read = true;

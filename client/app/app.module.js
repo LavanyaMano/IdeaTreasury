@@ -51,6 +51,46 @@ const AppModule = angular.module('app', [
             },
             component:'postsPage',
         })
+        .state('category', {
+            url: '/category',
+            resolve:{
+                me(postsAPIService){
+                    return postsAPIService.getMe();
+                },
+                posts(postsAPIService){
+                    return postsAPIService.getAllPosts();
+                },
+            },
+            component:'postsCategory',
+        })
+        .state('categorypost', {
+            url: '/category/{categoryName}',
+            resolve:{
+                me(postsAPIService){
+                    return postsAPIService.getMe();
+                },
+                posts(postsAPIService){
+                    return postsAPIService.getAllPosts();
+                },
+                category($stateParams){
+                    return ($stateParams);
+                },
+            },
+            component:'postsCategoryItem',
+        })
+        .state('post', {
+            url: '/post/{postId}',
+            resolve:{
+                me(postsAPIService){
+                    return postsAPIService.getMe();
+                },
+                post(postsAPIService,$stateParams){
+                    return postsAPIService.getPost($stateParams.postId);
+                },
+            },
+            component:'post',
+        })
+
         .state('addpost',{
             url:'/addpost',
             component:'postsEdit',

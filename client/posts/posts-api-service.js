@@ -28,8 +28,8 @@ function postsAPIService($resource, $http, $q){
         addPost(postToAdd){
             return postsResource.save(postToAdd).$promise;
         },
-        removePost(postToRemove){
-            return postsResource.remove(postToRemove).$promise;
+        removePost({postToRemove}){
+            return postsResource.remove({postToRemove}).$promise;
         },
         addRate(rateItem){
             return rateResource.save(rateItem).$promise;

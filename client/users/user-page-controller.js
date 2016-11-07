@@ -10,6 +10,13 @@ function UserPageController(userAPIService,$state){
     ctrl.received =[];
     ctrl.thischat =[];
     ctrl.receiverid = null;
+    ctrl.receiver='';
+    ctrl.chatMode = false;
+
+    ctrl.setReceiver = function setReceiver(name){
+        ctrl.receiver = name;
+        console.log("receiver name ---",ctrl.receiver);
+    };
     ctrl.mychats = function mychats(){
         console.log("here"+ctrl.me.id);
         if (ctrl.chat){
@@ -34,20 +41,16 @@ function UserPageController(userAPIService,$state){
 
     ctrl.chatlog = function chatlog(){
         ctrl.mychat;
-        console.log("my chat =====",ctrl.mychat);
         ctrl.receiverid;
-        console.log("receiverid ;;;;",ctrl.receiverid);
         for (var dchat in ctrl.mychat){
-            console.log("Loop is working");
-            console.log("userdasfid id .  ", ctrl.receiverid);
             if (ctrl.receiverid == ctrl.mychat[dchat].sender[1] ){
-
                 ctrl.thischat.push(ctrl.mychat[dchat]);}
             else if(ctrl.receiverid == ctrl.mychat[dchat].receiver){
                 ctrl.thischat.push(ctrl.mychat[dchat]);
         }}
-        console.log("this chat is ", ctrl.thischat)
+        ctrl.chatMode = true;
     };
+
 
     ctrl.saveChat = function saveChat() {
         ctrl.itemToChat.receiver = ctrl.receiverid;
@@ -63,9 +66,11 @@ function UserPageController(userAPIService,$state){
         ctrl.itemToChat.id = id;
         ctrl.itemToChat.read = true;
         console.log("readchat function working", ctrl.itemToChat)
-        userAPIService.saveChat(ctrl.itemToChat).then(()=>{
+        if( ctrl.itemToChat.receiverid == ctrl.me.id){
+            userAPIService.saveChat(ctrl.itemToChat).then(()=>{
             $state.reload();
-        });
+            });
+        }
         ctrl.itemToChat = {};
     };
 }

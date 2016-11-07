@@ -1,64 +1,81 @@
 <script>
 $(document).ready(function(){
-    $('[data-toggle="tooltip"]').tooltip(); 
+    $('[data-toggle="tooltip"]').tooltip();
 });
+
 </script>
+
+
 <div class="container">
 <div class="row">
     <div class="col-xs-4">
-        <img class="img-responsive" src="http://cdn.pcwallart.com/images/the-plain-color-green-wallpaper-2.jpg" alt="" >
-        <img class="img-responsive" src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSGww8v58IIuzgry9JLJM_hOoffD6qUUwYNzIyJpgrPRzK6_fWFaw" alt="" ng-show="img2">
-        <img class="img-responsive" src="http://wallpaper.zone/img/5161146.jpg" alt="" ng-show="img3">
+        <img class="img-responsive" src="http://cdn.pcwallart.com/images/the-plain-color-green-wallpaper-2.jpg" alt=""  ng-show="{{userPageCtrl.me.rating_user}}<5">
+        <img class="img-responsive" src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSGww8v58IIuzgry9JLJM_hOoffD6qUUwYNzIyJpgrPRzK6_fWFaw" alt="" ng-show="{{userPageCtrl.me.rating_user}}>=5 ">
+        <img class="img-responsive" src="http://wallpaper.zone/img/5161146.jpg" alt="" ng-show="{{userPageCtrl.me.rating_user}}>=10 ">
     </div>
         <div class="col-xs-4">
             <div class="well well-sm">Username: {{userPageCtrl.me.username}}</div>
             <div class="well well-sm">Firstname: {{userPageCtrl.me.username}}</div>
             <div class="well well-sm">Email:{{userPageCtrl.me.email}}</div>
             <div class="well well-sm">Joined: {{userPageCtrl.me.joined| date}}</div>
-            <div class="well well-sm" ng-show="userPageCtrl.me.rating">{{userPageCtrl.me.rating}}</div>
+            <div class="well well-sm">Rating: {{userPageCtrl.me.rating_user | number:0}}</div>
         </div>
         <div class="col-xs-4">
-            <a href="#" data-toggle="tooltip" title="userPageCtrl.me.chat_notification">
+            <a href="" data-toggle="tooltip" title="{{userPageCtrl.me.chat_notification}} unread chats">
             <div class="well well-sm" ng-show="userPageCtrl.me.chat_notification"> 
             You got chat notification
             </div>
             </a>
-            <div class="well well-sm" ng-show="userPageCtrl.me.comment_notification"> You got comment notification</div>
+             <a href="" data-toggle="tooltip" title="{{userPageCtrl.me.comment_notification}} unread comments">
+            <div class="well well-sm" ng-show="userPageCtrl.me.comment_notification">
+             You got comment notification</div>
             <div class="well well-sm">
-            
+            </a>
             Chat with 
                 <select name="chat-with" ng-model="userPageCtrl.receiverid" >
-                    <option ng-repeat="profile in userPageCtrl.users track by profile.id" value="{{profile.id}}" >
+                    <option ng-repeat="profile in userPageCtrl.users track by profile.id" ng-show="profile.id != userPageCtrl.me.id" value="{{profile.id}}" ng-click="userPageCtrl.setReceiver(profile.username)">
                     {{profile.username}}</option>
                 </select>
-                profile id herer --- {{userPageCtrl.receiverid}} 
-            <a href="" data-toggle="modal" data-target="#myModal" ng-click="userPageCtrl.chatlog()">
+            <a href="" ng-click="userPageCtrl.chatlog()">
             <i class="fa fa-check" aria-hidden="true"></i>
             </a></div>
-        </div>
-</div>
-</div>
 
-<!-- chat modal box opens -->
- <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
+<!-- #########Chat box panel######### -->
 
-      <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                Chat Box
-            </div>
-            <div class="modal-body">
-                <p class="well well-sm" ng-repeat="chat in userPageCtrl.thischat"> 
-                {{chat.message}} <sub>by {{chat.sender[0]}} [{{chat.time | date:'MM/dd/yyyy @ h:mma'}}]</sub>
-                </p>
-            </div>
-            <div class="modal-footer">
-                <form ng-submit="userPageCtrl.saveChat()">
-                    <input ng-model="userPageCtrl.itemToChat.message" class="form-control" placeholder="message here" >
-                </form>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
+<div id="accordion" role="tablist" aria-multiselectable="true" ng-show="userPageCtrl.chatMode">
+  <div class="card">
+    <div class="card-header" role="tab" id="headingOne">
+      <h5 class="mb-0">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="panel panel-header">
+          Chat 
+        </a>
+      </h5>
+      <form ng-submit="userPageCtrl.saveChat()" ng-show="userPageCtrl.chatMode">
+        <input ng-model="userPageCtrl.itemToChat.message" class="form-control" placeholder="message here" >
+    </form>
     </div>
+
+    <div id="collapseOne" class="collapse in" role="tabpanel" aria-labelledby="headingOne">
+      <div class="card-block">
+        <div ng-repeat="chat in userPageCtrl.thischat track by chat.id "> 
+        <p class="well well-sm"  ng-mouseover="userPageCtrl.readChat(chat.id)">
+            <a>{{chat.message}} <sub>by {{chat.sender[0]}}  [{{chat.time | date:'MM/dd/yyyy @ h:mma'}}]</sub></a> {{chat.read}}
+        </p>
+        <p class="well well-sm" ng-show="chat.read">
+            {{chat.message}} <sub>by {{chat.sender[0]}}  [{{chat.time | date:'MM/dd/yyyy @ h:mma'}}]</sub>
+        </p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+<!-- ####end of chat box##### -->
+
+            <!-- end of third column -->
+        </div>
+</div>
+</div>
+
+
+
+

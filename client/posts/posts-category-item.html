@@ -1,0 +1,121 @@
+<div class="well well-lg" ng-show="!postsCategoryItemCtrl.postsbycategory().length">
+    Items not available in this category.
+</div>
+<div class="row" id="posts-page-row-background">
+    <div class="col-md-3" ng-repeat="post in postsCategoryItemCtrl.postsbycategory() track by $index">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <ul class="nav nav-pills">
+                <li>
+                    <h3 class="panel-title">
+                    <!-- Modal link here to pop up modal box -->
+                     <a href="" data-toggle="modal" data-target="#myModal">
+                    Created by: {{post.username}}
+                    </a></h3>
+                </li>
+                <li>
+                    <span class="badge">
+                    Users: {{post.postusers.length}} 
+                    </span>
+                </li>
+                <li>
+                    <span class="badge">
+                    Likes: {{post.likes.length}} 
+                    </span>
+                </li>
+                <li>
+                    <span class="badge">
+                    Ratings: {{post.avg_rating | number:0}}
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="panel-body" id="post-panel-body">
+            <ul>
+                <li>Title: {{post.title}}</li>
+                <li>Reference: {{post.reference}}</li>
+            </ul>
+        </div>
+        <div class="panel-footer">
+            Creadted date: {{post.created_date | date}}
+        </div>
+            <!-- Start Modal -->
+            <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Title: {{post.title}}</h4>
+                    </div>
+                    <div class="modal-body">
+
+                    <!-- Plugging in the Panel code - starts-->
+                        <div class="panel panel-primary" ng-show ="!postsPageCtrl.editMode">
+                            <div class="panel-heading">
+                                <ul class="nav nav-pills">
+                                    <li>
+                                        <h3 class="panel-title">
+
+                                            Created by: {{post.username}}
+                                        </h3>
+                                    </li>
+                                    <li>
+                                        <span class="badge pull-right">Category: {{post.category}}</span>
+                                    </li>
+                                <li>
+                                <span class="badge">
+                                Users: {{post.postusers.length}} 
+                                </span>
+                                </li>
+                                <li>
+                                <span class="badge">
+                                Likes: {{post.likes.length}} 
+                                </span>
+                                </li>
+                                <li>
+                                <span class="badge">
+                                Ratings: {{post.avg_rating | number:0}}
+                                </span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="panel-body" id="post-panel-body">
+                        Text: {{post.text}}
+                        </div>
+                        <div class="panel-body" >
+                        Reference: {{post.reference}}
+                        </div>
+                            <div class="panel-footer" id="post-panel-footer">
+                                <ul ng-show="post.comment_set[0]">
+                                    Comments ({{post.comment_set.length}})
+                                    <li ng-repeat="data in post.comment_set" ng-show="!data.read">
+                                            {{data.comment}} by {{data.comment_by}} 
+                                    </li>
+                                    <li ng-repeat="data in post.comment_set" ng-show="data.read">
+                                        {{data.comment}} by {{data.comment_by}}
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="panel-footer">
+                                Creadted date: {{post.created_date | date}}
+                            </div>
+                        </div>
+                    <!-- Plugging in the Panel code - ends-->
+
+                    </div>      
+
+                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div> 
+            <!-- end modal test-- >
+
+    </div>
+    </div>
+</div>

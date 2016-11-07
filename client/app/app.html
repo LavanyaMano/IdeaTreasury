@@ -22,22 +22,21 @@
             <li ><a ui-sref= "user">User</a></li>
 
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
+              <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
                 <li ><a href="/accounts/logout/" >Logout</a></li>
                 <li class="divider"></li>
-                <li><a href="#">Separated link</a></li>
+                <li><a ui-sref="category">Choose Category</a></li>
                 <li class="divider"></li>
-                <li><a href="#">One more separated link</a></li>
               </ul>
             </li>
           </ul>
           
           <ul class="nav navbar-nav navbar-right">
             <li>
-                <form class="navbar-form " role="search">
+                <form class="navbar-form " role="search" ng-submit="appCtrl.filterPost()">
                 <div class="form-group">
-                  <input type="text" ng-model="appCtrl.filter"  class="form-control" placeholder="Search">
+                  <input type="text" ng-model="appCtrl.filter"  class="form-control" placeholder="Search post">
                 </div>
                 <button type="submit" class="btn btn-default">Submit</button>
               </form>
@@ -48,12 +47,6 @@
       </div>
     </nav>
 </header>
-<div class="container-fluid">
-    <!-- <img src="https://static.pexels.com/photos/5076/light-person-woman-fire.jpeg" alt="">
-    <p>
-      Dont keep your Ideas with yourself. Share it with us. Find Ideas. Make your dream ideas come true.
-    </p> -->
-</div>
 
 
 <div class="container-fluid">

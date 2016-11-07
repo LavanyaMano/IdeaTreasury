@@ -45,13 +45,13 @@ INSTALLED_APPS = (
 
 SITE_ID = 1
 # AUTH_USER_MODEL = 'user_profiles.User'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-}
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         'rest_framework.permissions.IsAuthenticated',
+#     ),
+# }
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -125,3 +125,5 @@ LOGOUT_URL = reverse_lazy('accounts:logout')
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+# EMAIL_BACKEND = "sgbackend.SendGridBackend"
+# SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']

@@ -33,7 +33,7 @@
             </ul>
         </div>
         <div class="panel-body">
-            <input ng-model="postsEditCtrl.editedItem.text" class="form-control" placeholder="Text" ></input>
+            <textarea class="form-control" rows="7" id="comment" ng-model="postsEditCtrl.editedItem.text" placeholder="Text"></textarea>
             <input ng-model="postsEditCtrl.editedItem.reference" class="form-control" placeholder="Reference"></input>
         </div>
         <div class="panel-footer">
@@ -46,7 +46,7 @@
                 </option>
             </select>
         </div>
-        <button class="btn btn-primary" type="submit">
+        <button class="btn btn-primary" type="submit" ng-if="postsEditCtrl.editedItem.text">
             Add
         </button>
         <button

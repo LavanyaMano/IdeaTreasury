@@ -7,8 +7,9 @@ function PostsEditController(postsAPIService,$state){
     ctrl.editedItem.visible = true;
 
     ctrl.saveItem =function saveItem(item){
+        console.log("edited item",ctrl.editedItem);
         postsAPIService.addPost(item).then((data)=>{
-            console.log(data)
+            console.log(data, "dats from edit ctrl. added data")
             $state.go('posts')
         })
     };

@@ -6,6 +6,7 @@ const postsPageComponent = {
     bindings:{
         me:'<',
         posts:'<',
+        filter:'<',
     },
     controller:PostsPageController,
     controllerAs:'postsPageCtrl',

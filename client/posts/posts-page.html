@@ -1,3 +1,4 @@
+<div class="row" id="posts-page-row-background">
 <a ui-sref="addpost">
     <button class="btn btn-default">
     <i class="fa fa-plus"></i>
@@ -5,23 +6,18 @@
     </button>
 </a>
 
+<br>
+<br>
 
-<div class="row">
-<div class="col-xs-3"  ng-repeat= "post in postsPageCtrl.posts track by post.id" ng-show="post.visible" >
-    <div class="panel panel-primary" ng-show ="!postsPageCtrl.editMode">
+<div class="col-md-3"  ng-repeat= "post in postsPageCtrl.posts| filter:postsPageCtrl.filter track by post.id">
+    <div class="panel panel-primary">
         <div class="panel-heading">
             <ul class="nav nav-pills">
                 <li>
                     <h3 class="panel-title">
-                    <!-- Modal link here to pop up modal box -->
-                     <a href="" data-toggle="modal" data-target="#myModal">
+                    <a ui-sref="post({postId:post.id})">
                     Created by: {{post.username}}
                     </a></h3>
-                </li>
-                <li>
-                    <button class="btn btn-default btn-xs" ng-click="postsPageCtrl.setMode('edit')">
-                        Edit
-                    </button>
                 </li>
                 <li>
                     <span class="badge pull-right">Category: {{post.category}}</span>
@@ -56,240 +52,9 @@
             Creadted date: {{post.created_date | date}}
         </div>
     </div>
-    
-    <!-- edit mode ############### -->
-    <div ng-show="postsPageCtrl.editMode">
-<form ng-submit="postsPageCtrl.saveItem(editedItem)" >
-    <div class="panel panel-primary form-group ">
-        <div class="panel-heading">
-            <ul class="nav nav-pills">
-                <li>
-                    <h3 class="panel-title">
-                    
-            <input ng-model="postsPageCtrl.editedItem.title" class="form-control" placeholder="{{post.title}}" >
-            </input>
-                    </h3>
-                </li>
-                <li>
-                    <span class="badge pull-right">
-                        <select name="category" ng-model="postsPageCtrl.editedItem.category" class="form-control">
-                            <option value="Art">
-                                Art
-                            </option>
-                            <option value="Science">
-                                Science
-                            </option>
-                            <option value="Finance">
-                                Finance
-                            </option>
-                            <option value="Technology">
-                                Technology
-                            </option>
-                            <option value="Business">
-                                Business
-                            </option>
-                        </select>
-                    </span>
-                </li>
-            </ul>
-        </div>
-        <div class="panel-body">
-            <input ng-model="postsPageCtrl.editedItem.text" class="form-control" placeholder="{{post.text}}" >
-            </input>
-            <input ng-model="postsPageCtrl.editedItem.reference" class="form-control" placeholder="{{post.reference}}"></input>
-        </div>
-        <div class="panel-footer">
-            <select name="visible" ng-model="postsPageCtrl.editedItem.visible" class="form-control">
-                <option value="true">
-                    Public
-                </option>
-                <option value="false">
-                    Private
-                </option>
-            </select>
-        </div>
-        <button class="btn btn-primary" ng-click="postsPageCtrl.saveItem(editedItem)">
-            update
-        </button>
-        <button
-        class="btn btn-danger"
-        type = "button"
-        ng-click="postsPageCtrl.setMode('cancel')"
-        >
-            Cancel
-        </button>
-    </div>
-</form>
-</div>
-<!-- ################# -->
-
-<!-- Start Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Title: {{post.title}}</h4>
-        </div>
-        <div class="modal-body">
-    
-<!-- Plugging in the Panel code - starts-->
-   <div class="panel panel-primary" ng-show ="!postsPageCtrl.editMode">
-        <div class="panel-heading">
-            <ul class="nav nav-pills">
-                <li>
-                    <h3 class="panel-title">
-
-                    Created by: {{post.username}}
-                    </h3>
-                </li>
-                <li>
-                    <span class="badge pull-right">Category: {{post.category}}</span>
-                </li>
-                <li class="dropdown">
-              <a href="" class="dropdown-toggle btn btn-info" data-toggle="dropdown" role="button" aria-expanded=""><span class="caret"></span></a>
-              <ul class="dropdown-menu" role="menu">
-                <li 
-                ng-show="postsPageCtrl.addUseMode">
-                    <a href="#" 
-                    ng-click="postsPageCtrl.addUse(post.id)">
-                        Use
-                    </a>
-                </li>
-                <li
-                ng-show="!postsPageCtrl.addUseMode">
-                    <a href="#" 
-                    ng-click="postsPageCtrl.removeUse(post.id)" 
-                    >
-                        Undo-Use
-                    </a>
-                </li>
-                <li 
-                ng-show="postsPageCtrl.addLikeMode">
-                    <a href="#" 
-                    ng-click="postsPageCtrl.addLike(post.id)"  >
-                        Like
-                    </a>
-                </li>
-                <li
-                ng-show="!postsPageCtrl.addLikeMode">
-                    <a href="#" 
-                    ng-click="postsPageCtrl.removeLike(post.id)" 
-                    >
-                        Undo-Like
-                    </a>
-                </li>
-                <li ng-show=" !post.username == postsPageCtrl.me.username">
-                    <a href="#"
-                    ng-click="postsPageCtrl.setRateMode(post.id)" >
-                        Rate
-                    </a>
-                </li>
-
-                <li class="divider" ng-show="post.username == postsPageCtrl.me.username"></li>
-                <li ng-show="post.username == postsPageCtrl.me.username">
-                    <a href="#" 
-                    ng-click="postsPageCtrl.setMode('edit')" >
-                        Edit
-                    </a>
-                </li>
-                <li class="divider" ng-show="post.username == postsPageCtrl.me.username"></li>
-                <li ng-show="post.username == postsPageCtrl.me.username">
-                    <a href="#"
-                    ng-click="postsPageCtrl.deleteItem(post.id)">
-                        Delete
-                    </a>
-                </li>
-              </ul>
-              <li ng-show="postsPageCtrl.rateMode" >
-                    <select name="rating" ng-model="postsPageCtrl.rating" >
-                        <option value=1 >
-                            1
-                        </option>
-                        <option value=2>
-                            2
-                        </option>
-                        <option value=3>
-                            3
-                        </option>
-                        <option value=4>
-                            4
-                        </option>
-                        <option value=5>
-                            5
-                        </option>
-                    </select>
-                    <button class="btn btn-info btn-xs" ng-click="postsPageCtrl.addRate(post.id)">ok</button>
-                </li>
-            </li>
-                <li>
-                    <span class="badge">
-                    Users: {{post.postusers.length}} 
-                    </span>
-                </li>
-                <li>
-                    <span class="badge">
-                    Likes: {{post.likes.length}} 
-                    </span>
-                </li>
-                <li>
-                    <span class="badge">
-                    Ratings: {{post.avg_rating | number:0}}
-                    </span>
-                </li>
-            </ul>
-        </div>
-
-        <div class="panel-body">
-            <ul>
-                <li>Text: {{post.text}}</li>
-                <li>Reference: {{post.reference}}</li>
-            </ul>
-        </div>
-        <div class="panel-footer">
-    
-            <ul ng-show="post.comment_set[0]">
-            Comments ({{post.comment_set.length}})
-            
-                <li ng-repeat="data in post.comment_set" ng-show="!data.read">
-                <a ng-click="postsPageCtrl.changeComment(data.id)">
-                {{data.comment}} by {{data.comment_by}}
-                </a> 
-                </li>
-                <li ng-repeat="data in post.comment_set" ng-show="data.read">
-                {{data.comment}} by {{data.comment_by}}
-                </li>
-            </ul>
-            
-                <form ng-submit="postsPageCtrl.comment(post.id)">
-                    <input ng-model="postsPageCtrl.itemToComment.comment" class="form-control" placeholder="comment here" >
-                    </form>
-
-        </div>
-        <div class="panel-footer">
-            Creadted date: {{post.created_date | date}}
-        </div>
-    </div>
-<!-- Plugging in the Panel code - ends-->
-
-        </div>      
-
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-
-    </div>
-  </div> 
-<!-- end modal test-- >
 
 </div>
 
 </div>
 
-<hr>
-{{postsPageCtrl.posts}}
 </div>

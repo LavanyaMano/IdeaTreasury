@@ -1,8 +1,6 @@
 from django.db import models
 from user_profiles.models import UserProfile
 
-
-
 class Posts(models.Model):
     user =models.ForeignKey(UserProfile)
     title = models.CharField(max_length = 100,default="Title")
@@ -13,6 +11,7 @@ class Posts(models.Model):
     postusers = models.ManyToManyField(UserProfile,blank=True,null=True,related_name= "postusing")
     likes = models.ManyToManyField(UserProfile,blank=True,
     null=True,related_name= "liked_post")
+
 
     ART = "Art"
     SCIENCE = "Science"

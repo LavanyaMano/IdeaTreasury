@@ -1,0 +1,142 @@
+
+<div class="row">
+    <div class="col-md-4">
+        <img id="postimg" src="http://masterpiecemanager.com/wp-content/uploads/2012/07/art-management.png" alt="" ng-show="postCtrl.post.category == 'Art'">
+        <img id="postimg" src="http://ohswebsite.s3.amazonaws.com/wp-content/uploads/science-igcse-cta-image.jpg" alt="" ng-show="postCtrl.post.category == 'Science'">
+        <img id="postimg" src="https://cdn.ihs.com/Technology/images/background/hero/industries.png" alt="" ng-show="postCtrl.post.category == 'Technology'">
+        <img id="postimg" src="https://www.sustainablebusinesstoolkit.com/wp-content/uploads/2013/07/green-business-ideas.jpg" alt="" ng-show="postCtrl.post.category == 'Business'">
+        <img id="postimg" src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTBYx6a4nwdp4au0-OuLyJsEKBg2WRQc8U9GepB1r4A-QlPx9eoLA" alt="" ng-show="postCtrl.post.category == 'Finance'">
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-primary" ng-show="!postCtrl.editMode">
+          <div class="panel-heading" id="post-panel-heading">
+            <h3 class="panel-title">{{postCtrl.post.title}}</h3>
+            <!-- edit/delete options when it is user's -->
+                <div class="btn-group pull-right" ng-show="postCtrl.post.username == postCtrl.me.username"> 
+                  <a href="" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="" ng-click="postCtrl.Mode('edit')">Edit</a></li>
+                    <li class="divider"></li>
+                    <li><a href="">Delete</a></li>
+                  </ul>
+                </div>
+          </div>
+          <div class="panel-heading" id="post-panel-heading">
+            <ul class="nav nav-pills">
+                <li>
+                    <a href="" ng-click="postCtrl.addUse()">
+                        <span class="badge">
+                        Users: {{postCtrl.post.postusers.length}} 
+                        </span>
+                    </a>
+                    
+                </li>
+                <li>
+                    <a href="" ng-click="postCtrl.addLike()">
+                        <span class="badge">
+                        Likes: {{postCtrl.post.likes.length}} 
+                        </span>
+                    </a>
+                    
+                </li>
+                <li>
+                    <a href="" ng-click="postCtrl.Mode('rate')">
+                        <span class="badge">
+                        Ratings: {{postCtrl.post.avg_rating | number:0}}
+                        </span>
+                    </a>
+                    
+                </li>
+                <li ng-show="postCtrl.rateMode" >
+                    <select name="rating" ng-model="postCtrl.rating" >
+                        <option value=1 >
+                            1
+                        </option>
+                        <option value=2>
+                            2
+                        </option>
+                        <option value=3>
+                            3
+                        </option>
+                        <option value=4>
+                            4
+                        </option>
+                        <option value=5>
+                            5
+                        </option>
+                    </select>
+                    <button class="btn btn-info btn-xs" ng-click="postCtrl.addRate()">ok</button>
+                </li>
+            </ul>
+          </div>
+          <div class="panel-body" id="post-panel-body">
+                {{postCtrl.post.text}}
+          </div>
+          <div class="panel-footer">
+          Reference: {{postCtrl.post.reference}}
+          </div>
+            <div class="panel-footer" id="post-panel-footer">
+                <form ng-submit="postCtrl.addComment()">
+                    <input ng-model="postCtrl.itemToComment.comment" class="form-control" placeholder="comment here" >
+                </form>
+                <ul ng-show="postCtrl.post.comment_set[0]">
+            Comments ({{postCtrl.post.comment_set.length}})
+            
+                <li ng-repeat="data in postCtrl.post.comment_set | orderBy: -data.id" ng-show="!data.read">
+                <a ng-click="postCtrl.readComment(data)">
+                {{data.comment}} by {{data.comment_by}}
+                </a> 
+                </li>
+                <li ng-repeat="data in postCtrl.post.comment_set" ng-show="data.read">
+                {{data.comment}} by {{data.comment_by}}
+                </li>
+            </ul>
+            
+                
+                </div>
+            <div class="panel-footer">
+                Creadted date: {{postCtrl.post.created_date | date}}
+            </div>
+        </div>
+        <!-- edite mode -->
+
+        <form ng-submit="postCtrl.saveItem()" ng-show="postCtrl.editMode">
+            <div class="panel panel-primary form-group ">
+                <div class="panel-heading">
+                    <ul class="nav nav-pills">
+                        <li>
+                            <h3 class="panel-title">
+                            
+                    <input ng-model="postCtrl.editedItem.title" class="form-control" placeholder="title" ></input>
+                            </h3>
+                        </li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <textarea class="form-control" rows="7" id="comment" ng-model="postCtrl.editedItem.text" placeholder="Text"></textarea>
+                    <input ng-model="postCtrl.editedItem.reference" class="form-control" placeholder="Reference"></input>
+                </div>
+                <div class="panel-footer">
+                    <select name="visible" ng-model="postCtrl.editedItem.visible" class="form-control">
+                        <option value="true">
+                            Public
+                        </option>
+                        <option value="false">
+                            Private
+                        </option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" type="submit" ng-if="postCtrl.editedItem.text">
+                    update
+                </button>
+                <button
+                class="btn btn-danger"
+                type = "button"
+                ng-click="postCtrl.cancel()"
+                >
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
