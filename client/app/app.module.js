@@ -41,6 +41,9 @@ const AppModule = angular.module('app', [
         })
         .state('posts', {
             url: '/posts',
+            params: { 
+                filter: null
+            },
             resolve:{
                 me(postsAPIService){
                     return postsAPIService.getMe();

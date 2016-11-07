@@ -8,7 +8,7 @@ function AppController(postsAPIService,$state) {
     });
 
     ctrl.filterPost = function filterPost(){
-        $state.go('posts',{$stateparams:ctrl.filter});
+        $state.go('posts',{filter: ctrl.filter});
         ctrl.filter = null;
     }
 }

@@ -1,7 +1,7 @@
 import { findIndex } from 'ramda';
 import { merge } from 'ramda';
 
-function PostsPageController(postsAPIService,$state, $window){
+function PostsPageController(postsAPIService,$state, $stateParams){
     
     const ctrl = this;
     ctrl.itemToComment ={};
@@ -13,8 +13,8 @@ function PostsPageController(postsAPIService,$state, $window){
     ctrl.addUseMode = true;
     ctrl.addLikeMode = true;
 
-    console.log("filter @@@@", ctrl.filter);
-    
+    ctrl.filter = $stateParams.filter;
+
     ctrl.setMode = function setMode(mode){
         if (mode == "add"){
             ctrl.addMode = true;

@@ -121,6 +121,9 @@
 	        component: 'userPage'
 	    }).state('posts', {
 	        url: '/posts',
+	        params: {
+	            filter: null
+	        },
 	        resolve: {
 	            me: function me(postsAPIService) {
 	                return postsAPIService.getMe();
@@ -67212,7 +67215,7 @@
 	
 	var _ramda = __webpack_require__(164);
 	
-	function PostsPageController(postsAPIService, $state, $window) {
+	function PostsPageController(postsAPIService, $state, $stateParams) {
 	
 	    var ctrl = this;
 	    ctrl.itemToComment = {};
@@ -67224,7 +67227,7 @@
 	    ctrl.addUseMode = true;
 	    ctrl.addLikeMode = true;
 	
-	    console.log("filter @@@@", ctrl.filter);
+	    ctrl.filter = $stateParams.filter;
 	
 	    ctrl.setMode = function setMode(mode) {
 	        if (mode == "add") {
@@ -76818,7 +76821,7 @@
 	    });
 	
 	    ctrl.filterPost = function filterPost() {
-	        $state.go('posts', { $stateparams: ctrl.filter });
+	        $state.go('posts', { filter: ctrl.filter });
 	        ctrl.filter = null;
 	    };
 	}
