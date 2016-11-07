@@ -13,6 +13,8 @@ function PostsPageController(postsAPIService,$state, $window){
     ctrl.addUseMode = true;
     ctrl.addLikeMode = true;
 
+    console.log("filter @@@@", ctrl.filter);
+    
     ctrl.setMode = function setMode(mode){
         if (mode == "add"){
             ctrl.addMode = true;

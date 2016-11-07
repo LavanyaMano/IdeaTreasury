@@ -67224,6 +67224,8 @@
 	    ctrl.addUseMode = true;
 	    ctrl.addLikeMode = true;
 	
+	    console.log("filter @@@@", ctrl.filter);
+	
 	    ctrl.setMode = function setMode(mode) {
 	        if (mode == "add") {
 	            ctrl.addMode = true;
@@ -76794,7 +76796,7 @@
 /* 185 */
 /***/ function(module, exports) {
 
-	module.exports = "<header>\n    <nav class=\"navbar navbar-default\">\n      <div class=\"container-fluid\">\n        <div class=\"navbar-header\">\n          <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#bs-example-navbar-collapse-1\">\n            <span class=\"sr-only\">Toggle navigation</span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n          </button>\n          <a class=\"navbar-brand\" ui-sref=\"home\">\n            <i class=\"fa fa-lightbulb-o\" aria-hidden=\"true\"></i>\n            Ideas\n          </a>\n        </div>\n\n        <div class=\"collapse navbar-collapse\" id=\"bs-example-navbar-collapse-1\">\n          <ul class=\"nav navbar-nav\">\n            <li class=\"active\">\n            <a href=\"#\">Welcome {{appCtrl.currentuser.username}} <span class=\"sr-only\">(current)\n            </span></a></li>\n            <li ><a ui-sref= \"user\">User</a></li>\n\n            <li class=\"dropdown\">\n              <a href=\"\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\">Dropdown <span class=\"caret\"></span></a>\n              <ul class=\"dropdown-menu\" role=\"menu\">\n                <li ><a href=\"/accounts/logout/\" >Logout</a></li>\n                <li class=\"divider\"></li>\n                <li><a ui-sref=\"category\">Choose Category</a></li>\n                <li class=\"divider\"></li>\n              </ul>\n            </li>\n          </ul>\n          \n          <ul class=\"nav navbar-nav navbar-right\">\n            <li>\n                <form class=\"navbar-form \" role=\"search\" ng-submit=\"appCtrl.filterPost()\">\n                <div class=\"form-group\">\n                  <input type=\"text\" ng-model=\"appCtrl.filter\"  class=\"form-control\" placeholder=\"Search post\">\n                </div>\n                <button type=\"submit\" class=\"btn btn-default\">Submit</button>\n              </form>\n            </li>\n            <li><a ui-sref=\"posts\">Posts</a></li>\n          </ul>\n        </div>\n      </div>\n    </nav>\n</header>\n\n\n<div class=\"container-fluid\">\n    <ui-view></ui-view>\n</div>"
+	module.exports = "<header>\n    <nav class=\"navbar navbar-default\">\n      <div class=\"container-fluid\">\n        <div class=\"navbar-header\">\n          <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#bs-example-navbar-collapse-1\">\n            <span class=\"sr-only\">Toggle navigation</span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n          </button>\n          <a class=\"navbar-brand\" ui-sref=\"home\">\n            <i class=\"fa fa-lightbulb-o\" aria-hidden=\"true\"></i>\n            Ideas\n          </a>\n        </div>\n\n        <div class=\"collapse navbar-collapse\" id=\"bs-example-navbar-collapse-1\">\n          <ul class=\"nav navbar-nav\">\n            <li class=\"active\">\n            <a href=\"#\">Welcome {{appCtrl.currentuser.username}} <span class=\"sr-only\">(current)\n            </span></a></li>\n            <li ><a ui-sref= \"user\">User</a></li>\n\n            <li class=\"dropdown\">\n              <a href=\"\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\">Post <span class=\"caret\"></span></a>\n              <ul class=\"dropdown-menu\" role=\"menu\">\n                <li><a ui-sref=\"posts\">All Posts</a></li>\n                <li class=\"divider\"></li>\n                <li><a ui-sref=\"category\">Posts by Category</a></li>\n                <li class=\"divider\"></li>\n              </ul>\n            </li>\n          </ul>\n          \n          <ul class=\"nav navbar-nav navbar-right\">\n            <li>\n                <form class=\"navbar-form \" role=\"search\" ng-submit=\"appCtrl.filterPost()\">\n                <div class=\"form-group\">\n                  <input type=\"text\" ng-model=\"appCtrl.filter\"  class=\"form-control\" placeholder=\"Search post\">\n                </div>\n                <button type=\"submit\" class=\"btn btn-default\">Submit</button>\n              </form>\n            </li>\n            <li ><a href=\"/accounts/logout/\" >Logout</a></li>\n          </ul>\n        </div>\n      </div>\n    </nav>\n</header>\n\n\n<div class=\"container-fluid\">\n    <ui-view></ui-view>\n</div>"
 
 /***/ },
 /* 186 */
@@ -76817,6 +76819,7 @@
 	
 	    ctrl.filterPost = function filterPost() {
 	        $state.go('posts', { $stateparams: ctrl.filter });
+	        ctrl.filter = null;
 	    };
 	}
 	exports.default = AppController;
