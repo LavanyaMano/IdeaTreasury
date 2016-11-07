@@ -22,20 +22,19 @@ select{
     max-height: 400px;
     overflow: scroll;
 }
-#posts-page-row-background{
-    background: black;
-}
+
 
 #postimg{
-    width: 100%;
-    height: 500px;
+    width: 90%;
+    height: 300px;
 }
 body{
-    background-image: url(https://67.media.tumblr.com/d299de0264876129d18942ac24bd21f5/tumblr_npw7w7v0uI1uu62svo1_500.gif);
-    background-repeat: no-repeat;
+    background-image:url(http://i0.wp.com/dpshots.com/images/bokeh_photography/bokeh_photography_glass.jpg?resize=540%2C345);
+    /*background-image: url(http://blog.crowdsupply.com/content/images/2015/08/lights-night-unsharp-blured.jpg);*/
+    background-repeat: repeat-y;
     background-size: 100%;
 }
-
+/*https://67.media.tumblr.com/d299de0264876129d18942ac24bd21f5/tumblr_npw7w7v0uI1uu62svo1_500.gif*/
 #postsCategory-fonts{
     color: orange;
     text-align: center;

@@ -13,6 +13,24 @@ function UserPageController(userAPIService,$state){
     ctrl.receiver='';
     ctrl.chatMode = false;
 
+    ctrl.setUserImage = function setUserImage (){
+        if(ctrl.me.rating_user<=10){
+            ctrl.img1 = true;
+            ctrl.img2 = false;
+            ctrl.img3 = false;
+        }
+        if((ctrl.me.rating_user < 50)&& (ctrl.me.rating_user>10)){
+            ctrl.img2 = true;
+            ctrl.img1 = false;
+            ctrl.img3 = false;
+        }
+        if(ctrl.me.rating_user>=50){
+            ctrl.img3 = true;
+            ctrl.img2 = false;
+            ctrl.img1 = false;
+        }
+    }
+    ctrl.setUserImage();
     ctrl.setReceiver = function setReceiver(name){
         ctrl.receiver = name;
         console.log("receiver name ---",ctrl.receiver);

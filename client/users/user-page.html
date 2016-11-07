@@ -9,9 +9,9 @@ $(document).ready(function(){
 <div class="container">
 <div class="row">
     <div class="col-xs-4">
-        <img class="img-responsive" src="http://cdn.pcwallart.com/images/the-plain-color-green-wallpaper-2.jpg" alt=""  ng-show="{{userPageCtrl.me.rating_user}}<5">
-        <img class="img-responsive" src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSGww8v58IIuzgry9JLJM_hOoffD6qUUwYNzIyJpgrPRzK6_fWFaw" alt="" ng-show="10>{{userPageCtrl.me.rating_user}}>=5 ">
-        <img class="img-responsive" src="http://wallpaper.zone/img/5161146.jpg" alt="" ng-show="{{userPageCtrl.me.rating_user}}>=10 ">
+        <img class="img-responsive" src="http://cdn.pcwallart.com/images/the-plain-color-green-wallpaper-2.jpg" alt=""  ng-show="userPageCtrl.img1">
+        <img class="img-responsive" src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSGww8v58IIuzgry9JLJM_hOoffD6qUUwYNzIyJpgrPRzK6_fWFaw" alt="" ng-show="userPageCtrl.img2">
+        <img class="img-responsive" src="http://wallpaper.zone/img/5161146.jpg" alt="" ng-show="userPageCtrl.img3">
     </div>
         <div class="col-xs-4">
             <div class="well well-sm">Username: {{userPageCtrl.me.username}}</div>
