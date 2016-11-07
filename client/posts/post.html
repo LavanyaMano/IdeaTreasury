@@ -17,7 +17,7 @@
                   <ul class="dropdown-menu">
                     <li><a href="" ng-click="postCtrl.Mode('edit')">Edit</a></li>
                     <li class="divider"></li>
-                    <li><a href="">Delete</a></li>
+                    <li><a href="" ng-click="postCtrl.deleteItem()">Delete</a></li>
                   </ul>
                 </div>
           </div>
@@ -73,7 +73,7 @@
                 {{postCtrl.post.text}}
           </div>
           <div class="panel-footer">
-          Reference: {{postCtrl.post.reference}}
+          Reference: {{postCtrl.post.reference}} 
           </div>
             <div class="panel-footer" id="post-panel-footer">
                 <form ng-submit="postCtrl.addComment()">
@@ -96,6 +96,21 @@
                 </div>
             <div class="panel-footer">
                 Creadted date: {{postCtrl.post.created_date | date}}
+                <a ui-sref="posts">
+                    <button class="btn btn-primary btn-sm pull-right" type="submit">
+                        Back to Posts
+                    </button>
+                </a>
+                <a ui-sref="post({postId:{{postCtrl.post.id-1}}})">
+                    <button class="btn btn-primary btn-sm pull-right" type="submit">
+                        Previous Post
+                    </button>
+                </a>
+                <a ui-sref="post({postId:{{postCtrl.post.id+1}}})">
+                    <button class="btn btn-primary btn-sm pull-right" type="submit">
+                        Next Post
+                    </button>
+                </a>
             </div>
         </div>
         <!-- edite mode -->

@@ -62,14 +62,19 @@ function UserPageController(userAPIService,$state){
         });
         ctrl.itemToChat = {};
     };
-    ctrl.readChat= function readChat(id){
-        ctrl.itemToChat.id = id;
+
+    ctrl.readChat= function readChat(chat){
+        ctrl.itemToChat = chat;
         ctrl.itemToChat.read = true;
+        console.log("chat receiverid bxvzvxbzxvnxbv,", chat.receiver);
+        console.log("me .....id", ctrl.me.id);
         console.log("readchat function working", ctrl.itemToChat)
-        if( ctrl.itemToChat.receiverid == ctrl.me.id){
-            userAPIService.saveChat(ctrl.itemToChat).then(()=>{
+        if( ctrl.chat.receiver == ctrl.me.id){
+            console.log("inside my read chat for loop");
+            userAPIService.updateChat(ctrl.itemToChat).then((data)=>{
+                console.log(data,"here inside read chat function");
             $state.reload();
-            });
+        });
         }
         ctrl.itemToChat = {};
     };

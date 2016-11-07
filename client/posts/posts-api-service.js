@@ -1,7 +1,7 @@
 function postsAPIService($resource, $http, $q){
-    const postsResource=$resource('/api/posts/:id/',{id:'@id'});
-    const rateResource = $resource('/api/rate/:id/',{id:'@id'});
-    const commentResource = $resource('/api/comment/:id/',{id:'@id'});
+    const postsResource=$resource('/api/posts/:id/',{id:'@id'},{update:{method:'PUT'},});
+    const rateResource = $resource('/api/rate/:id/',{id:'@id'},{update:{method:'PUT'},});
+    const commentResource = $resource('/api/comment/:id/',{id:'@id'},{update:{method:'PUT'},});
 
     let me =null;
 
@@ -26,11 +26,13 @@ function postsAPIService($resource, $http, $q){
             });
         },
         addPost(postToAdd){
-            console.log('add post', postToAdd)
             return postsResource.save(postToAdd).$promise;
         },
-        removePost({postToRemove}){
-            return postsResource.remove({postToRemove}).$promise;
+        updatePost(postToupdate){
+            return postsResource.update(postToupdate).$promise;
+        },
+        removePost(postToRemove){
+            return postsResource.remove(postToRemove).$promise;
         },
         addRate(rateItem){
             return rateResource.save(rateItem).$promise;
@@ -40,6 +42,9 @@ function postsAPIService($resource, $http, $q){
         },
         addComment(commentItem){
             return commentResource.save(commentItem).$promise;
+        },
+        updateComment(commentItem){
+            return commentResource.update(commentItem).$promise;
         },
     };
 }

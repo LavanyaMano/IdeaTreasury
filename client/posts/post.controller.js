@@ -12,7 +12,6 @@ function PostController(postsAPIService,$state,){
     ctrl.rating = 1;
 
     console.log("page is reloading ==== ", ctrl.post);
-    console.log("page reloaded -- saved as editedItem", ctrl.editedItem);
     ctrl.Mode = function Mode (mode){
         if (mode == 'edit'){
             ctrl.editMode = true;
@@ -27,14 +26,18 @@ function PostController(postsAPIService,$state,){
     };
 
     ctrl.saveItem =function saveItem(){
-        console.log("thi us item passed ",ctrl.editedItem);
-        postsAPIService.addPost(ctrl.editedItem).then((data)=>{
+        postsAPIService.updatePost(ctrl.editedItem).then((data)=>{
             console.log("this is the item add to api",data)
             $state.reload();
         })
     };
     ctrl.cancel = function cancel(){
         ctrl.editMode =false;
+    };
+
+    //delete post
+    ctrl.deleteItem = function deleteItem(){
+        postsAPIService.removePost(ctrl.post).then(()=>{$state.go('posts');})
     };
 
 
@@ -52,13 +55,13 @@ function PostController(postsAPIService,$state,){
         ctrl.post.postusers.push(ctrl.me.id);
         console.log("adduse function in post ctrl");
         console.log("this is post users  ",ctrl.post.postusers);
-        postsAPIService.addPost(ctrl.post).then((data)=>$state.reload())
+        postsAPIService.updatePost(ctrl.post).then((data)=>$state.reload())
     };
 
     //addLike
     ctrl.addLike = function addLike (){
         ctrl.post.likes.push(ctrl.me.id);
-        postsAPIService.addPost(ctrl.post).then(()=>$state.reload())
+        postsAPIService.updatePost(ctrl.post).then(()=>$state.reload())
     };
 
     //add comment
@@ -72,7 +75,7 @@ function PostController(postsAPIService,$state,){
     ctrl.readComment = function readComment(data){
         data.read= true;
         if(ctrl.post.username== ctrl.me.username){
-            postsAPIService.addComment(data).then(()=> $state.reload())
+            postsAPIService.updateComment(data).then(()=> $state.reload())
         }
         
     };

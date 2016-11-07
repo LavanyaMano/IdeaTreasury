@@ -76226,7 +76226,7 @@
 /* 169 */
 /***/ function(module, exports) {
 
-	module.exports = "\n<div class=\"row\">\n    <div class=\"col-md-4\">\n        <img id=\"postimg\" src=\"http://masterpiecemanager.com/wp-content/uploads/2012/07/art-management.png\" alt=\"\" ng-show=\"postCtrl.post.category == 'Art'\">\n        <img id=\"postimg\" src=\"http://ohswebsite.s3.amazonaws.com/wp-content/uploads/science-igcse-cta-image.jpg\" alt=\"\" ng-show=\"postCtrl.post.category == 'Science'\">\n        <img id=\"postimg\" src=\"https://cdn.ihs.com/Technology/images/background/hero/industries.png\" alt=\"\" ng-show=\"postCtrl.post.category == 'Technology'\">\n        <img id=\"postimg\" src=\"https://www.sustainablebusinesstoolkit.com/wp-content/uploads/2013/07/green-business-ideas.jpg\" alt=\"\" ng-show=\"postCtrl.post.category == 'Business'\">\n        <img id=\"postimg\" src=\"https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTBYx6a4nwdp4au0-OuLyJsEKBg2WRQc8U9GepB1r4A-QlPx9eoLA\" alt=\"\" ng-show=\"postCtrl.post.category == 'Finance'\">\n    </div>\n    <div class=\"col-md-6\">\n        <div class=\"panel panel-primary\" ng-show=\"!postCtrl.editMode\">\n          <div class=\"panel-heading\" id=\"post-panel-heading\">\n            <h3 class=\"panel-title\">{{postCtrl.post.title}}</h3>\n            <!-- edit/delete options when it is user's -->\n                <div class=\"btn-group pull-right\" ng-show=\"postCtrl.post.username == postCtrl.me.username\"> \n                  <a href=\"\" class=\"btn btn-primary dropdown-toggle\" data-toggle=\"dropdown\"><span class=\"caret\"></span></a>\n                  <ul class=\"dropdown-menu\">\n                    <li><a href=\"\" ng-click=\"postCtrl.Mode('edit')\">Edit</a></li>\n                    <li class=\"divider\"></li>\n                    <li><a href=\"\">Delete</a></li>\n                  </ul>\n                </div>\n          </div>\n          <div class=\"panel-heading\" id=\"post-panel-heading\">\n            <ul class=\"nav nav-pills\">\n                <li>\n                    <a href=\"\" ng-click=\"postCtrl.addUse()\">\n                        <span class=\"badge\">\n                        Users: {{postCtrl.post.postusers.length}} \n                        </span>\n                    </a>\n                    \n                </li>\n                <li>\n                    <a href=\"\" ng-click=\"postCtrl.addLike()\">\n                        <span class=\"badge\">\n                        Likes: {{postCtrl.post.likes.length}} \n                        </span>\n                    </a>\n                    \n                </li>\n                <li>\n                    <a href=\"\" ng-click=\"postCtrl.Mode('rate')\">\n                        <span class=\"badge\">\n                        Ratings: {{postCtrl.post.avg_rating | number:0}}\n                        </span>\n                    </a>\n                    \n                </li>\n                <li ng-show=\"postCtrl.rateMode\" >\n                    <select name=\"rating\" ng-model=\"postCtrl.rating\" >\n                        <option value=1 >\n                            1\n                        </option>\n                        <option value=2>\n                            2\n                        </option>\n                        <option value=3>\n                            3\n                        </option>\n                        <option value=4>\n                            4\n                        </option>\n                        <option value=5>\n                            5\n                        </option>\n                    </select>\n                    <button class=\"btn btn-info btn-xs\" ng-click=\"postCtrl.addRate()\">ok</button>\n                </li>\n            </ul>\n          </div>\n          <div class=\"panel-body\" id=\"post-panel-body\">\n                {{postCtrl.post.text}}\n          </div>\n          <div class=\"panel-footer\">\n          Reference: {{postCtrl.post.reference}}\n          </div>\n            <div class=\"panel-footer\" id=\"post-panel-footer\">\n                <form ng-submit=\"postCtrl.addComment()\">\n                    <input ng-model=\"postCtrl.itemToComment.comment\" class=\"form-control\" placeholder=\"comment here\" >\n                </form>\n                <ul ng-show=\"postCtrl.post.comment_set[0]\">\n            Comments ({{postCtrl.post.comment_set.length}})\n            \n                <li ng-repeat=\"data in postCtrl.post.comment_set | orderBy: -data.id\" ng-show=\"!data.read\">\n                <a ng-click=\"postCtrl.readComment(data)\">\n                {{data.comment}} by {{data.comment_by}}\n                </a> \n                </li>\n                <li ng-repeat=\"data in postCtrl.post.comment_set\" ng-show=\"data.read\">\n                {{data.comment}} by {{data.comment_by}}\n                </li>\n            </ul>\n            \n                \n                </div>\n            <div class=\"panel-footer\">\n                Creadted date: {{postCtrl.post.created_date | date}}\n            </div>\n        </div>\n        <!-- edite mode -->\n\n        <form ng-submit=\"postCtrl.saveItem()\" ng-show=\"postCtrl.editMode\">\n            <div class=\"panel panel-primary form-group \">\n                <div class=\"panel-heading\">\n                    <ul class=\"nav nav-pills\">\n                        <li>\n                            <h3 class=\"panel-title\">\n                            \n                    <input ng-model=\"postCtrl.editedItem.title\" class=\"form-control\" placeholder=\"title\" ></input>\n                            </h3>\n                        </li>\n                    </ul>\n                </div>\n                <div class=\"panel-body\">\n                    <textarea class=\"form-control\" rows=\"7\" id=\"comment\" ng-model=\"postCtrl.editedItem.text\" placeholder=\"Text\"></textarea>\n                    <input ng-model=\"postCtrl.editedItem.reference\" class=\"form-control\" placeholder=\"Reference\"></input>\n                </div>\n                <div class=\"panel-footer\">\n                    <select name=\"visible\" ng-model=\"postCtrl.editedItem.visible\" class=\"form-control\">\n                        <option value=\"true\">\n                            Public\n                        </option>\n                        <option value=\"false\">\n                            Private\n                        </option>\n                    </select>\n                </div>\n                <button class=\"btn btn-primary\" type=\"submit\" ng-if=\"postCtrl.editedItem.text\">\n                    update\n                </button>\n                <button\n                class=\"btn btn-danger\"\n                type = \"button\"\n                ng-click=\"postCtrl.cancel()\"\n                >\n                    Cancel\n                </button>\n            </div>\n        </form>\n    </div>\n</div>"
+	module.exports = "\n<div class=\"row\">\n    <div class=\"col-md-4\">\n        <img id=\"postimg\" src=\"http://masterpiecemanager.com/wp-content/uploads/2012/07/art-management.png\" alt=\"\" ng-show=\"postCtrl.post.category == 'Art'\">\n        <img id=\"postimg\" src=\"http://ohswebsite.s3.amazonaws.com/wp-content/uploads/science-igcse-cta-image.jpg\" alt=\"\" ng-show=\"postCtrl.post.category == 'Science'\">\n        <img id=\"postimg\" src=\"https://cdn.ihs.com/Technology/images/background/hero/industries.png\" alt=\"\" ng-show=\"postCtrl.post.category == 'Technology'\">\n        <img id=\"postimg\" src=\"https://www.sustainablebusinesstoolkit.com/wp-content/uploads/2013/07/green-business-ideas.jpg\" alt=\"\" ng-show=\"postCtrl.post.category == 'Business'\">\n        <img id=\"postimg\" src=\"https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTBYx6a4nwdp4au0-OuLyJsEKBg2WRQc8U9GepB1r4A-QlPx9eoLA\" alt=\"\" ng-show=\"postCtrl.post.category == 'Finance'\">\n    </div>\n    <div class=\"col-md-6\">\n        <div class=\"panel panel-primary\" ng-show=\"!postCtrl.editMode\">\n          <div class=\"panel-heading\" id=\"post-panel-heading\">\n            <h3 class=\"panel-title\">{{postCtrl.post.title}}</h3>\n            <!-- edit/delete options when it is user's -->\n                <div class=\"btn-group pull-right\" ng-show=\"postCtrl.post.username == postCtrl.me.username\"> \n                  <a href=\"\" class=\"btn btn-primary dropdown-toggle\" data-toggle=\"dropdown\"><span class=\"caret\"></span></a>\n                  <ul class=\"dropdown-menu\">\n                    <li><a href=\"\" ng-click=\"postCtrl.Mode('edit')\">Edit</a></li>\n                    <li class=\"divider\"></li>\n                    <li><a href=\"\" ng-click=\"postCtrl.deleteItem()\">Delete</a></li>\n                  </ul>\n                </div>\n          </div>\n          <div class=\"panel-heading\" id=\"post-panel-heading\">\n            <ul class=\"nav nav-pills\">\n                <li>\n                    <a href=\"\" ng-click=\"postCtrl.addUse()\">\n                        <span class=\"badge\">\n                        Users: {{postCtrl.post.postusers.length}} \n                        </span>\n                    </a>\n                    \n                </li>\n                <li>\n                    <a href=\"\" ng-click=\"postCtrl.addLike()\">\n                        <span class=\"badge\">\n                        Likes: {{postCtrl.post.likes.length}} \n                        </span>\n                    </a>\n                    \n                </li>\n                <li>\n                    <a href=\"\" ng-click=\"postCtrl.Mode('rate')\">\n                        <span class=\"badge\">\n                        Ratings: {{postCtrl.post.avg_rating | number:0}}\n                        </span>\n                    </a>\n                    \n                </li>\n                <li ng-show=\"postCtrl.rateMode\" >\n                    <select name=\"rating\" ng-model=\"postCtrl.rating\" >\n                        <option value=1 >\n                            1\n                        </option>\n                        <option value=2>\n                            2\n                        </option>\n                        <option value=3>\n                            3\n                        </option>\n                        <option value=4>\n                            4\n                        </option>\n                        <option value=5>\n                            5\n                        </option>\n                    </select>\n                    <button class=\"btn btn-info btn-xs\" ng-click=\"postCtrl.addRate()\">ok</button>\n                </li>\n            </ul>\n          </div>\n          <div class=\"panel-body\" id=\"post-panel-body\">\n                {{postCtrl.post.text}}\n          </div>\n          <div class=\"panel-footer\">\n          Reference: {{postCtrl.post.reference}} \n          </div>\n            <div class=\"panel-footer\" id=\"post-panel-footer\">\n                <form ng-submit=\"postCtrl.addComment()\">\n                    <input ng-model=\"postCtrl.itemToComment.comment\" class=\"form-control\" placeholder=\"comment here\" >\n                </form>\n                <ul ng-show=\"postCtrl.post.comment_set[0]\">\n            Comments ({{postCtrl.post.comment_set.length}})\n            \n                <li ng-repeat=\"data in postCtrl.post.comment_set | orderBy: -data.id\" ng-show=\"!data.read\">\n                <a ng-click=\"postCtrl.readComment(data)\">\n                {{data.comment}} by {{data.comment_by}}\n                </a> \n                </li>\n                <li ng-repeat=\"data in postCtrl.post.comment_set\" ng-show=\"data.read\">\n                {{data.comment}} by {{data.comment_by}}\n                </li>\n            </ul>\n            \n                \n                </div>\n            <div class=\"panel-footer\">\n                Creadted date: {{postCtrl.post.created_date | date}}\n                <a ui-sref=\"posts\">\n                    <button class=\"btn btn-primary btn-sm pull-right\" type=\"submit\">\n                        Back to Posts\n                    </button>\n                </a>\n                <a ui-sref=\"post({postId:{{postCtrl.post.id-1}}})\">\n                    <button class=\"btn btn-primary btn-sm pull-right\" type=\"submit\">\n                        Previous Post\n                    </button>\n                </a>\n                <a ui-sref=\"post({postId:{{postCtrl.post.id+1}}})\">\n                    <button class=\"btn btn-primary btn-sm pull-right\" type=\"submit\">\n                        Next Post\n                    </button>\n                </a>\n            </div>\n        </div>\n        <!-- edite mode -->\n\n        <form ng-submit=\"postCtrl.saveItem()\" ng-show=\"postCtrl.editMode\">\n            <div class=\"panel panel-primary form-group \">\n                <div class=\"panel-heading\">\n                    <ul class=\"nav nav-pills\">\n                        <li>\n                            <h3 class=\"panel-title\">\n                            \n                    <input ng-model=\"postCtrl.editedItem.title\" class=\"form-control\" placeholder=\"title\" ></input>\n                            </h3>\n                        </li>\n                    </ul>\n                </div>\n                <div class=\"panel-body\">\n                    <textarea class=\"form-control\" rows=\"7\" id=\"comment\" ng-model=\"postCtrl.editedItem.text\" placeholder=\"Text\"></textarea>\n                    <input ng-model=\"postCtrl.editedItem.reference\" class=\"form-control\" placeholder=\"Reference\"></input>\n                </div>\n                <div class=\"panel-footer\">\n                    <select name=\"visible\" ng-model=\"postCtrl.editedItem.visible\" class=\"form-control\">\n                        <option value=\"true\">\n                            Public\n                        </option>\n                        <option value=\"false\">\n                            Private\n                        </option>\n                    </select>\n                </div>\n                <button class=\"btn btn-primary\" type=\"submit\" ng-if=\"postCtrl.editedItem.text\">\n                    update\n                </button>\n                <button\n                class=\"btn btn-danger\"\n                type = \"button\"\n                ng-click=\"postCtrl.cancel()\"\n                >\n                    Cancel\n                </button>\n            </div>\n        </form>\n    </div>\n</div>"
 
 /***/ },
 /* 170 */
@@ -76251,7 +76251,6 @@
 	    ctrl.rating = 1;
 	
 	    console.log("page is reloading ==== ", ctrl.post);
-	    console.log("page reloaded -- saved as editedItem", ctrl.editedItem);
 	    ctrl.Mode = function Mode(mode) {
 	        if (mode == 'edit') {
 	            ctrl.editMode = true;
@@ -76265,14 +76264,20 @@
 	    };
 	
 	    ctrl.saveItem = function saveItem() {
-	        console.log("thi us item passed ", ctrl.editedItem);
-	        postsAPIService.addPost(ctrl.editedItem).then(function (data) {
+	        postsAPIService.updatePost(ctrl.editedItem).then(function (data) {
 	            console.log("this is the item add to api", data);
 	            $state.reload();
 	        });
 	    };
 	    ctrl.cancel = function cancel() {
 	        ctrl.editMode = false;
+	    };
+	
+	    //delete post
+	    ctrl.deleteItem = function deleteItem() {
+	        postsAPIService.removePost(ctrl.post).then(function () {
+	            $state.go('posts');
+	        });
 	    };
 	
 	    // add rate 
@@ -76291,7 +76296,7 @@
 	        ctrl.post.postusers.push(ctrl.me.id);
 	        console.log("adduse function in post ctrl");
 	        console.log("this is post users  ", ctrl.post.postusers);
-	        postsAPIService.addPost(ctrl.post).then(function (data) {
+	        postsAPIService.updatePost(ctrl.post).then(function (data) {
 	            return $state.reload();
 	        });
 	    };
@@ -76299,7 +76304,7 @@
 	    //addLike
 	    ctrl.addLike = function addLike() {
 	        ctrl.post.likes.push(ctrl.me.id);
-	        postsAPIService.addPost(ctrl.post).then(function () {
+	        postsAPIService.updatePost(ctrl.post).then(function () {
 	            return $state.reload();
 	        });
 	    };
@@ -76317,7 +76322,7 @@
 	    ctrl.readComment = function readComment(data) {
 	        data.read = true;
 	        if (ctrl.post.username == ctrl.me.username) {
-	            postsAPIService.addComment(data).then(function () {
+	            postsAPIService.updateComment(data).then(function () {
 	                return $state.reload();
 	            });
 	        }
@@ -76473,9 +76478,9 @@
 	    value: true
 	});
 	function postsAPIService($resource, $http, $q) {
-	    var postsResource = $resource('/api/posts/:id/', { id: '@id' });
-	    var rateResource = $resource('/api/rate/:id/', { id: '@id' });
-	    var commentResource = $resource('/api/comment/:id/', { id: '@id' });
+	    var postsResource = $resource('/api/posts/:id/', { id: '@id' }, { update: { method: 'PUT' } });
+	    var rateResource = $resource('/api/rate/:id/', { id: '@id' }, { update: { method: 'PUT' } });
+	    var commentResource = $resource('/api/comment/:id/', { id: '@id' }, { update: { method: 'PUT' } });
 	
 	    var me = null;
 	
@@ -76500,13 +76505,13 @@
 	            });
 	        },
 	        addPost: function addPost(postToAdd) {
-	            console.log('add post', postToAdd);
 	            return postsResource.save(postToAdd).$promise;
 	        },
-	        removePost: function removePost(_ref) {
-	            var postToRemove = _ref.postToRemove;
-	
-	            return postsResource.remove({ postToRemove: postToRemove }).$promise;
+	        updatePost: function updatePost(postToupdate) {
+	            return postsResource.update(postToupdate).$promise;
+	        },
+	        removePost: function removePost(postToRemove) {
+	            return postsResource.remove(postToRemove).$promise;
 	        },
 	        addRate: function addRate(rateItem) {
 	            return rateResource.save(rateItem).$promise;
@@ -76516,6 +76521,9 @@
 	        },
 	        addComment: function addComment(commentItem) {
 	            return commentResource.save(commentItem).$promise;
+	        },
+	        updateComment: function updateComment(commentItem) {
+	            return commentResource.update(commentItem).$promise;
 	        }
 	    };
 	}
@@ -76605,7 +76613,7 @@
 /* 181 */
 /***/ function(module, exports) {
 
-	module.exports = "<script>\n$(document).ready(function(){\n    $('[data-toggle=\"tooltip\"]').tooltip();\n});\n\n</script>\n\n\n<div class=\"container\">\n<div class=\"row\">\n    <div class=\"col-xs-4\">\n        <img class=\"img-responsive\" src=\"http://cdn.pcwallart.com/images/the-plain-color-green-wallpaper-2.jpg\" alt=\"\"  ng-show=\"{{userPageCtrl.me.rating_user}}<5\">\n        <img class=\"img-responsive\" src=\"https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSGww8v58IIuzgry9JLJM_hOoffD6qUUwYNzIyJpgrPRzK6_fWFaw\" alt=\"\" ng-show=\"{{userPageCtrl.me.rating_user}}>=5 \">\n        <img class=\"img-responsive\" src=\"http://wallpaper.zone/img/5161146.jpg\" alt=\"\" ng-show=\"{{userPageCtrl.me.rating_user}}>=10 \">\n    </div>\n        <div class=\"col-xs-4\">\n            <div class=\"well well-sm\">Username: {{userPageCtrl.me.username}}</div>\n            <div class=\"well well-sm\">Firstname: {{userPageCtrl.me.username}}</div>\n            <div class=\"well well-sm\">Email:{{userPageCtrl.me.email}}</div>\n            <div class=\"well well-sm\">Joined: {{userPageCtrl.me.joined| date}}</div>\n            <div class=\"well well-sm\">Rating: {{userPageCtrl.me.rating_user | number:0}}</div>\n        </div>\n        <div class=\"col-xs-4\">\n            <a href=\"\" data-toggle=\"tooltip\" title=\"{{userPageCtrl.me.chat_notification}} unread chats\">\n            <div class=\"well well-sm\" ng-show=\"userPageCtrl.me.chat_notification\"> \n            You got chat notification\n            </div>\n            </a>\n             <a href=\"\" data-toggle=\"tooltip\" title=\"{{userPageCtrl.me.comment_notification}} unread comments\">\n            <div class=\"well well-sm\" ng-show=\"userPageCtrl.me.comment_notification\">\n             You got comment notification</div>\n            <div class=\"well well-sm\">\n            </a>\n            Chat with \n                <select name=\"chat-with\" ng-model=\"userPageCtrl.receiverid\" >\n                    <option ng-repeat=\"profile in userPageCtrl.users track by profile.id\" ng-show=\"profile.id != userPageCtrl.me.id\" value=\"{{profile.id}}\" ng-click=\"userPageCtrl.setReceiver(profile.username)\">\n                    {{profile.username}}</option>\n                </select>\n            <a href=\"\" ng-click=\"userPageCtrl.chatlog()\">\n            <i class=\"fa fa-check\" aria-hidden=\"true\"></i>\n            </a></div>\n\n<!-- #########Chat box panel######### -->\n\n<div id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\" ng-show=\"userPageCtrl.chatMode\">\n  <div class=\"card\">\n    <div class=\"card-header\" role=\"tab\" id=\"headingOne\">\n      <h5 class=\"mb-0\">\n        <a data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapseOne\" aria-expanded=\"true\" aria-controls=\"collapseOne\" class=\"panel panel-header\">\n          Chat \n        </a>\n      </h5>\n      <form ng-submit=\"userPageCtrl.saveChat()\" ng-show=\"userPageCtrl.chatMode\">\n        <input ng-model=\"userPageCtrl.itemToChat.message\" class=\"form-control\" placeholder=\"message here\" >\n    </form>\n    </div>\n\n    <div id=\"collapseOne\" class=\"collapse in\" role=\"tabpanel\" aria-labelledby=\"headingOne\">\n      <div class=\"card-block\">\n        <div ng-repeat=\"chat in userPageCtrl.thischat track by chat.id \"> \n        <p class=\"well well-sm\"  ng-mouseover=\"userPageCtrl.readChat(chat.id)\">\n            <a>{{chat.message}} <sub>by {{chat.sender[0]}}  [{{chat.time | date:'MM/dd/yyyy @ h:mma'}}]</sub></a> {{chat.read}}\n        </p>\n        <p class=\"well well-sm\" ng-show=\"chat.read\">\n            {{chat.message}} <sub>by {{chat.sender[0]}}  [{{chat.time | date:'MM/dd/yyyy @ h:mma'}}]</sub>\n        </p>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n<!-- ####end of chat box##### -->\n\n            <!-- end of third column -->\n        </div>\n</div>\n</div>\n\n\n\n\n"
+	module.exports = "<script>\n$(document).ready(function(){\n    $('[data-toggle=\"tooltip\"]').tooltip();\n});\n\n</script>\n\n\n<div class=\"container\">\n<div class=\"row\">\n    <div class=\"col-xs-4\">\n        <img class=\"img-responsive\" src=\"http://cdn.pcwallart.com/images/the-plain-color-green-wallpaper-2.jpg\" alt=\"\"  ng-show=\"{{userPageCtrl.me.rating_user}}<5\">\n        <img class=\"img-responsive\" src=\"https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSGww8v58IIuzgry9JLJM_hOoffD6qUUwYNzIyJpgrPRzK6_fWFaw\" alt=\"\" ng-show=\"10>{{userPageCtrl.me.rating_user}}>=5 \">\n        <img class=\"img-responsive\" src=\"http://wallpaper.zone/img/5161146.jpg\" alt=\"\" ng-show=\"{{userPageCtrl.me.rating_user}}>=10 \">\n    </div>\n        <div class=\"col-xs-4\">\n            <div class=\"well well-sm\">Username: {{userPageCtrl.me.username}}</div>\n            <div class=\"well well-sm\">Firstname: {{userPageCtrl.me.username}}</div>\n            <div class=\"well well-sm\">Email:{{userPageCtrl.me.email}}</div>\n            <div class=\"well well-sm\">Joined: {{userPageCtrl.me.joined| date}}</div>\n            <div class=\"well well-sm\">Rating: {{userPageCtrl.me.rating_user | number:0}}</div>\n        </div>\n        <div class=\"col-xs-4\">\n            <a href=\"\" data-toggle=\"tooltip\" title=\"{{userPageCtrl.me.chat_notification}} unread chats\">\n            <div class=\"well well-sm\" ng-show=\"userPageCtrl.me.chat_notification\"> \n            You got chat notification\n            </div>\n            </a>\n             <a href=\"\" data-toggle=\"tooltip\" title=\"{{userPageCtrl.me.comment_notification}} unread comments\">\n            <div class=\"well well-sm\" ng-show=\"userPageCtrl.me.comment_notification\">\n             You got comment notification</div>\n            <div class=\"well well-sm\">\n            </a>\n            Chat with \n                <select name=\"chat-with\" ng-model=\"userPageCtrl.receiverid\" >\n                    <option ng-repeat=\"profile in userPageCtrl.users track by profile.id\" ng-show=\"profile.id != userPageCtrl.me.id\" value=\"{{profile.id}}\" ng-click=\"userPageCtrl.setReceiver(profile.username)\">\n                    {{profile.username}}</option>\n                </select>\n            <a href=\"\" ng-click=\"userPageCtrl.chatlog()\">\n            <i class=\"fa fa-check\" aria-hidden=\"true\"></i>\n            </a></div>\n\n<!-- #########Chat box panel######### -->\n\n<div id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\" ng-show=\"userPageCtrl.chatMode\">\n  <div class=\"card\">\n    <div class=\"card-header\" role=\"tab\" id=\"headingOne\">\n      <h5 class=\"mb-0\">\n        <a data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapseOne\" aria-expanded=\"true\" aria-controls=\"collapseOne\" class=\"panel panel-header\">\n          Chat \n        </a>\n      </h5>\n      <form ng-submit=\"userPageCtrl.saveChat()\" ng-show=\"userPageCtrl.chatMode\">\n        <input ng-model=\"userPageCtrl.itemToChat.message\" class=\"form-control\" placeholder=\"message here\" >\n    </form>\n    </div>\n\n    <div id=\"collapseOne\" class=\"collapse in\" role=\"tabpanel\" aria-labelledby=\"headingOne\">\n      <div class=\"card-block\">\n        <div ng-repeat=\"chat in userPageCtrl.thischat track by chat.id \"> \n        <p class=\"well well-sm\"  ng-mouseover=\"userPageCtrl.readChat(chat)\" ng-show=\"!chat.read\">\n            <a>{{chat.message}} <sub>by {{chat.sender[0]}}  [{{chat.time | date:'MM/dd/yyyy @ h:mma'}}]</sub></a> {{chat.read}}\n        </p>\n        <p class=\"well well-sm\" ng-show=\"chat.read\">\n            {{chat.message}} <sub>by {{chat.sender[0]}}  [{{chat.time | date:'MM/dd/yyyy @ h:mma'}}]</sub>\n        </p>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n<!-- ####end of chat box##### -->\n\n            <!-- end of third column -->\n        </div>\n</div>\n</div>\n\n\n\n\n"
 
 /***/ },
 /* 182 */
@@ -76681,12 +76689,17 @@
 	        });
 	        ctrl.itemToChat = {};
 	    };
-	    ctrl.readChat = function readChat(id) {
-	        ctrl.itemToChat.id = id;
+	
+	    ctrl.readChat = function readChat(chat) {
+	        ctrl.itemToChat = chat;
 	        ctrl.itemToChat.read = true;
+	        console.log("chat receiverid bxvzvxbzxvnxbv,", chat.receiver);
+	        console.log("me .....id", ctrl.me.id);
 	        console.log("readchat function working", ctrl.itemToChat);
-	        if (ctrl.itemToChat.receiverid == ctrl.me.id) {
-	            userAPIService.saveChat(ctrl.itemToChat).then(function () {
+	        if (ctrl.chat.receiver == ctrl.me.id) {
+	            console.log("inside my read chat for loop");
+	            userAPIService.updateChat(ctrl.itemToChat).then(function (data) {
+	                console.log(data, "here inside read chat function");
 	                $state.reload();
 	            });
 	        }
@@ -76706,8 +76719,8 @@
 	    value: true
 	});
 	function userAPIService($resource) {
-	    var userResource = $resource('/api/user/:id/', { id: '@id' });
-	    var chatResource = $resource('/api/chat/:id/', { id: '@id' });
+	    var userResource = $resource('/api/user/:id/', { id: '@id' }, { update: { method: 'PUT' } });
+	    var chatResource = $resource('/api/chat/:id/', { id: '@id' }, { update: { method: 'PUT' } });
 	
 	    return {
 	        getUser: function getUser() {
@@ -76722,6 +76735,9 @@
 	        },
 	        saveChat: function saveChat(chatItems) {
 	            return chatResource.save(chatItems).$promise;
+	        },
+	        updatChat: function updatChat(chatItems) {
+	            return chatResource.update(chatItems).$promise;
 	        }
 	    };
 	}
