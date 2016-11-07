@@ -6,6 +6,11 @@
     height: 250px;
     overflow : auto;
 }*/
+#django-login-section{
+    margin-left: 30%;
+    margin-right: 30%;
+    width: 50%;
+};
 #homepage h2{
     font-size: 20px;
     font-family: cursive;
