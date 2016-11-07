@@ -4,7 +4,7 @@ import angularCookies from 'angular-cookies';
 import PostsModule from '../posts/posts.module';
 import UserModule from '../users/users.module';
 import appComponent from './app.component';
-
+import homeComponent from './home.component';
 import userAPIService from '../users/users-api-service';
 import postsAPIService from '../posts/posts-api-service';
 
@@ -21,8 +21,8 @@ const AppModule = angular.module('app', [
 
         $stateProvider
         .state('home',{
-            url:'/',
-           
+            url:'/home',
+           component:'home',
         })
         .state('user', {
             url: '/user',
@@ -99,6 +99,7 @@ const AppModule = angular.module('app', [
 })
     .factory('userAPIService',userAPIService)
     .component('app', appComponent)
+    .component('home',homeComponent)
     .run(($http, $cookies) => {
         // Add a header for CSRF token, so that POST does not fail to our API
 

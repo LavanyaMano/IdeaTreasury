@@ -82,6 +82,10 @@
 	
 	var _app2 = _interopRequireDefault(_app);
 	
+	var _home = __webpack_require__(187);
+	
+	var _home2 = _interopRequireDefault(_home);
+	
 	var _usersApiService = __webpack_require__(183);
 	
 	var _usersApiService2 = _interopRequireDefault(_usersApiService);
@@ -99,8 +103,8 @@
 	    $urlRouterProvider.otherwise('/');
 	
 	    $stateProvider.state('home', {
-	        url: '/'
-	
+	        url: '/home',
+	        component: 'home'
 	    }).state('user', {
 	        url: '/user',
 	        resolve: {
@@ -166,7 +170,7 @@
 	        url: '/addpost',
 	        component: 'postsEdit'
 	    });
-	}).factory('userAPIService', _usersApiService2.default).component('app', _app2.default).run(function ($http, $cookies) {
+	}).factory('userAPIService', _usersApiService2.default).component('app', _app2.default).component('home', _home2.default).run(function ($http, $cookies) {
 	    // Add a header for CSRF token, so that POST does not fail to our API
 	
 	    // eslint-disable-next-line no-param-reassign
@@ -76496,6 +76500,7 @@
 	            });
 	        },
 	        addPost: function addPost(postToAdd) {
+	            console.log('add post', postToAdd);
 	            return postsResource.save(postToAdd).$promise;
 	        },
 	        removePost: function removePost(_ref) {
@@ -76781,6 +76786,53 @@
 	    };
 	}
 	exports.default = AppController;
+
+/***/ },
+/* 187 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _home = __webpack_require__(188);
+	
+	var _home2 = _interopRequireDefault(_home);
+	
+	var _home3 = __webpack_require__(189);
+	
+	var _home4 = _interopRequireDefault(_home3);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var homeComponent = {
+	    template: _home2.default,
+	    controller: _home4.default,
+	    controllerAs: 'homeCtrl'
+	};
+	
+	exports.default = homeComponent;
+
+/***/ },
+/* 188 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"row\">\n    <div class=\"col-md-2\"></div>\n    <div class=\"col-md-8\">\n        <div class=\"well\" id = \"homepage\">\n            <div class=\"panel-header\">\n                <h1>Welcome to IdeaHub. </h1>\n            </div>\n            \n            \n            <br>\n            \n            <h2>Mission: <sub>[Growth with sharing new ideas]</sub></h2>\n            <hr>\n            <ul>\n                <li>IdeaHub wants to be new google for ideas.</li>\n                <li>\n                    Any idea for a product, project, DIYs, innovation, academic, etc. can be posted and viewed in this site\n                </li>\n                <li>\n                    It is ultimately to develope the world community.\n                </li>\n                <li>\n                    IdeaHub wants to be a new seed for new business setups, technology growth in any fields, educational, etc.\n                </li>\n                <li>\n                    IdeaHub will bring the innovative person/community to the lime light.\n                </li>\n                <li>\n                    Survey the idea market.\n                </li>\n            </ul>\n        </div>\n    </div>\n    <div class=\"col-md-2\"></div>\n</div>"
+
+/***/ },
+/* 189 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	function HomeController() {}
+	exports.default = HomeController;
 
 /***/ }
 /******/ ]);

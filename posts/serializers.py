@@ -14,7 +14,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     comment_set = CommentSerializer(many=True, read_only = True)
-    username = serializers.SerializerMethodField()
+    username = serializers.SerializerMethodField(allow_null=True)
 
     def get_username(self, post):
         return post.user.username()
@@ -41,6 +41,13 @@ class PostSerializer(serializers.ModelSerializer):
             'created_date',
             'avg_rating',
             'comment_new')
+
+    # def create(self, validated_data):
+    #     # import pdb; pdb.set_trace()
+    #     obj = Posts.objects.create(**validated_data)
+    #     obj.user = self.context["request"].user.userprofile
+    #     obj.save()
+    #     return obj
 
 
 

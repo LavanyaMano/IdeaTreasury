@@ -26,6 +26,7 @@ function postsAPIService($resource, $http, $q){
             });
         },
         addPost(postToAdd){
+            console.log('add post', postToAdd)
             return postsResource.save(postToAdd).$promise;
         },
         removePost({postToRemove}){
