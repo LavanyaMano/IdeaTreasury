@@ -16,7 +16,7 @@ function userAPIService($resource){
         saveChat(chatItems){
             return chatResource.save(chatItems).$promise;
         },
-        updatChat(chatItems){
+        updateChat(chatItems){
             return chatResource.update(chatItems).$promise;
         },
     };

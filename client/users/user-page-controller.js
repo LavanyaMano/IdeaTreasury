@@ -84,14 +84,11 @@ function UserPageController(userAPIService,$state){
     ctrl.readChat= function readChat(chat){
         ctrl.itemToChat = chat;
         ctrl.itemToChat.read = true;
-        console.log("chat receiverid bxvzvxbzxvnxbv,", chat.receiver);
+        console.log("chat receiverid -----,", chat.receiver);
         console.log("me .....id", ctrl.me.id);
-        console.log("readchat function working", ctrl.itemToChat)
-        if( ctrl.chat.receiver == ctrl.me.id){
-            console.log("inside my read chat for loop");
+        if(chat.receiver == ctrl.me.id){
             userAPIService.updateChat(ctrl.itemToChat).then((data)=>{
                 console.log(data,"here inside read chat function");
-            $state.reload();
         });
         }
         ctrl.itemToChat = {};

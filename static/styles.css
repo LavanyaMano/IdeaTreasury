@@ -55,7 +55,6 @@ body{
 }
 #post-panel-body{
     max-height: 190px;
-    overflow: scroll;
 }
 #post-panel-footer{
     max-height: 100px;

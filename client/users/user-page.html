@@ -59,7 +59,7 @@ $(document).ready(function(){
       <div class="card-block">
         <div ng-repeat="chat in userPageCtrl.thischat track by chat.id "> 
         <p class="well well-sm"  ng-mouseover="userPageCtrl.readChat(chat)" ng-show="!chat.read">
-            <a>{{chat.message}} <sub>by {{chat.sender[0]}}  [{{chat.time | date:'MM/dd/yyyy @ h:mma'}}]</sub></a> {{chat.read}}
+            <a>{{chat.message}} <sub>by {{chat.sender[0]}}  [{{chat.time | date:'MM/dd/yyyy @ h:mma'}}]</sub></a> 
         </p>
         <p class="well well-sm" ng-show="chat.read">
             {{chat.message}} <sub>by {{chat.sender[0]}}  [{{chat.time | date:'MM/dd/yyyy @ h:mma'}}]</sub>
