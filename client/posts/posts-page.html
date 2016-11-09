@@ -44,9 +44,9 @@
 
         <div class="panel-body" id="post-panel-body">
             <ul>
-                <li>Title: {{post.title}}</li>
+                <li>Title: {{post.title | limitTo: 25}}</li>
                 <li>Text: {{post.text | limitTo: 20}}</li>
-                <li>Reference: {{post.reference}}</li>
+                <li>Reference: {{post.reference | limitTo: 20}}</li>
             </ul>
         </div>
         <div class="panel-footer">
