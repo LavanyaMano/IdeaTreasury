@@ -19,10 +19,11 @@
                     Created by: {{post.username}}
                     </a></h3>
                 </li>
+                <br>
                 <li>
                     <span class="badge pull-right">Category: {{post.category}}</span>
                 </li>
-               
+               <br>
                 <li>
                     <span class="badge">
                     Users: {{post.postusers.length}} 
@@ -44,7 +45,7 @@
         <div class="panel-body" id="post-panel-body">
             <ul>
                 <li>Title: {{post.title}}</li>
-                <li>Text: {{post.text}}</li>
+                <li>Text: {{post.text | limitTo: 20}}</li>
                 <li>Reference: {{post.reference}}</li>
             </ul>
         </div>
