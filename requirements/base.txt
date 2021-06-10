@@ -1,6 +1,6 @@
 defusedxml==0.4.1
 dj-database-url==0.4.1
-Django==1.8.14
+Django==2.2.24
 django-allauth==0.28.0
 django-rest-auth==0.8.1
 django-sendgrid==1.0.1
